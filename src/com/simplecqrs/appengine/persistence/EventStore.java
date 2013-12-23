@@ -1,8 +1,8 @@
-package com.google.appengine.cqrs.persistence;
+package com.simplecqrs.appengine.persistence;
 
 import java.util.UUID;
 
-import com.google.appengine.cqrs.messaging.Event;
+import com.simplecqrs.appengine.messaging.Event;
 
 /**
  * Interface to support basic event store functionality

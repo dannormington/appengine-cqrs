@@ -1,4 +1,4 @@
-package com.google.appengine.cqrs.messaging;
+package com.simplecqrs.appengine.messaging;
 
 /**
  * Interface for all events to implement

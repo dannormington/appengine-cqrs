@@ -1,4 +1,4 @@
-package com.google.appengine.cqrs.persistence;
+package com.simplecqrs.appengine.persistence;
 
 /**
  * Simple event that is stored

@@ -1,12 +1,12 @@
-package com.google.appengine.cqrs.persistence;
+package com.simplecqrs.appengine.persistence;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.UUID;
 
-import com.google.appengine.cqrs.domain.AggregateRoot;
-import com.google.appengine.cqrs.messaging.Event;
+import com.simplecqrs.appengine.domain.AggregateRoot;
+import com.simplecqrs.appengine.messaging.Event;
 
 /**
  * Implementation of a simple event repository

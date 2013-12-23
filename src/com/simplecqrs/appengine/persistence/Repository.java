@@ -1,9 +1,9 @@
-package com.google.appengine.cqrs.persistence;
+package com.simplecqrs.appengine.persistence;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
-import com.google.appengine.cqrs.domain.AggregateRoot;
+import com.simplecqrs.appengine.domain.AggregateRoot;
 
 /**
  * Interface for a repository implementation

@@ -1,9 +1,9 @@
-package com.google.appengine.cqrs.domain;
+package com.simplecqrs.appengine.domain;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
-import com.google.appengine.cqrs.messaging.Event;
+import com.simplecqrs.appengine.messaging.Event;
 
 /**
  * Interface to support basic aggregate root functionality
