@@ -1,0 +1,15 @@
+# Eclipse project files
+.classpath
+.settings
+
+# App Engine Files #
+*.api
+.google_apis
+appengine-generated
+endpoint-libs
+
+# Package Files #
+*.class
+*.jar
+*.war
+*.ear
