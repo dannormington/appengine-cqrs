@@ -8,6 +8,8 @@
 appengine-generated
 endpoint-libs
 
+.DS_Store
+
 # Package Files #
 *.class
 *.jar
