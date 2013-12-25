@@ -14,12 +14,14 @@ public interface Repository<T extends AggregateRoot> {
 	
 	/**
 	 * Save the aggregate
+	 * 
 	 * @param aggregate
 	 */
-	void save(T aggregate);
+	void save(T aggregate) throws EventCollisionException;
 	
 	/**
 	 * Get the aggregate
+	 * 
 	 * @param id
 	 * @return
 	 * @throws NoSuchMethodException

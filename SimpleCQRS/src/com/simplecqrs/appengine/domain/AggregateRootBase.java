@@ -16,23 +16,23 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	/**
 	 * Aggregate id
 	 */
-	private UUID _id = null;
+	private UUID id = null;
 
 	/**
 	 * list of changes that have occurred since last loaded
 	 */
-	private List<Event> _changes = new ArrayList<Event>();
+	private List<Event> changes = new ArrayList<Event>();
 	
 	/**
 	 * returns the expected version
 	 */
-	private int _expectedVersion = 0;
+	private int expectedVersion = 0;
 	
 	/**
 	 * Default constructor
 	 */
 	public AggregateRootBase(){
-		_id = UUID.randomUUID();
+		id = UUID.randomUUID();
 	}
 	
 	/**
@@ -40,27 +40,27 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * @param id
 	 */
 	public AggregateRootBase(UUID id){
-		_id = id;
+		this.id = id;
 	}
 	
 	@Override
 	public int getExpectedVersion(){
-		return _expectedVersion;
+		return expectedVersion;
 	}
 	
 	@Override
 	public void markChangesAsCommitted(){
-		_changes.clear();
+		changes.clear();
 	} 
 	
 	@Override
 	public UUID getId(){
-		return _id;
+		return id;
 	}
 	
 	@Override
 	public Iterable<Event> getUncommittedChanges(){
-		return _changes == null || _changes.isEmpty() ? null : _changes;
+		return changes == null || changes.isEmpty() ? null : changes;
 	}
 	
 	@Override
@@ -102,10 +102,10 @@ public abstract class AggregateRootBase implements AggregateRoot {
 		method.setAccessible(true);
 		method.invoke(this,event);
 		
-		_expectedVersion++;
+		expectedVersion++;
 			
 		if(isNew){
-			_changes.add(event);
+			changes.add(event);
 		}
 	}
 }

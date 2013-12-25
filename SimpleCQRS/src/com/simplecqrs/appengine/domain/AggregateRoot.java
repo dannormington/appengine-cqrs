@@ -6,29 +6,31 @@ import java.util.UUID;
 import com.simplecqrs.appengine.messaging.Event;
 
 /**
- * Interface to support basic aggregate root functionality
+ * Simple interface to an aggregate root
  */
 public interface AggregateRoot {
 	
 	/**
-	 * Get the id of the aggregate
+	 * get the Id
+	 * 
 	 * @return
 	 */
 	UUID getId();
 	
 	/**
-	 * Get a list of all the changes that have occurred since the aggregate was loaded
+	 * get the aggregates events
+	 * 
 	 * @return
 	 */
 	Iterable<Event> getUncommittedChanges();
 	
 	/**
-	 * Mark all changes as committed
+	 * Mark all changes a committed
 	 */
 	void markChangesAsCommitted();
 	
 	/**
-	 * Load the aggregate from a list of events
+	 * load the aggregate root
 	 * 
 	 * @param history
 	 * @throws NoSuchMethodException
