@@ -40,7 +40,7 @@
 		<link>
 			<name>SimpleCQRS</name>
 			<type>2</type>
-			<location>/Users/dannormington/projects/repos/GoogleAppEngineSimpleCQRS/SimpleCQRS/src</location>
+			<locationURI>PARENT-1-PROJECT_LOC/SimpleCQRS/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

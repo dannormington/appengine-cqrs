@@ -2,7 +2,6 @@ package com.simplecqrs.appengine.example;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.google.appengine.api.users.User;
 import com.simplecqrs.appengine.example.services.AttendeeService;
 
 @Api(
@@ -17,7 +16,7 @@ public class AttendeeApi {
 		httpMethod = "POST",
 		path = "register"
 	)
-	public AttendeeRegistrationResult register(RegisterAttendeeCommand command, User user) {
+	public AttendeeRegistrationResult register(RegisterAttendeeCommand command) {
 		
 		AttendeeService service = new AttendeeService();
 		return service.register(command.getAttendeeId(), command.getFirstName(), command.getLastName());
