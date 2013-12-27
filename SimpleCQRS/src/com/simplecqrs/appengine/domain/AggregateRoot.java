@@ -38,10 +38,10 @@ public interface AggregateRoot {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	void loadFromHistory(Iterable<Event> history) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+	void loadFromHistory(Iterable<Event> history) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 	
 	/**
-	 * Returns the expected version of the first new event
+	 * Returns the version of the aggregate when it was hydrated
 	 * @return
 	 */
 	int getExpectedVersion();

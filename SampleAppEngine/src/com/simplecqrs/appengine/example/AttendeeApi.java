@@ -16,9 +16,19 @@ public class AttendeeApi {
 		httpMethod = "POST",
 		path = "register"
 	)
-	public AttendeeRegistrationResult register(RegisterAttendeeCommand command) {
+	public ServiceResult register(RegisterAttendeeCommand command) {
 		
 		AttendeeService service = new AttendeeService();
 		return service.register(command.getAttendeeId(), command.getFirstName(), command.getLastName());
 	}
+	
+	@ApiMethod(
+			httpMethod = "POST",
+			path = "changename"
+		)
+		public ServiceResult changeName(ChangeAttendeeNameCommand command) {
+			
+			AttendeeService service = new AttendeeService();
+			return service.changeAttendeeName(command.getAttendeeId(), command.getFirstName(), command.getLastName());
+		}
 }

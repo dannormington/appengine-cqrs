@@ -20,7 +20,7 @@ import com.simplecqrs.appengine.messaging.MessageLog;
  * Basic implementation of an event store that persists
  * and retrieves from a Google App Engine Datastore 
  */
-public class SimpleEventStore implements EventStore {
+public class AppEngineEventStore implements EventStore {
 	
 	/**
 	 * The name of the kind/schema
@@ -46,6 +46,7 @@ public class SimpleEventStore implements EventStore {
 				
 				Key key = KeyFactory.createKey(KIND, aggregateId.toString());		
 				Entity entity = null;
+				long currentVersion = 0;
 				
 				try {
 					entity = dataStore.get(transaction,key);
@@ -60,12 +61,15 @@ public class SimpleEventStore implements EventStore {
 					entityEvents = new ArrayList<String>();
 				}
 				else{
-				
 					entityEvents = (List<String>)entity.getProperty(EVENTS_PROPERTY);
+					currentVersion = entityEvents.size();
 					
-					long currentVersion = entityEvents.size();
-					
-					if(currentVersion >= expectedVersion)
+					//if the current version is different than what
+					//was hydrated during the state change then we
+					//know we have an event collision. This is a very simple approach
+					//and more "business knowledge" can be added here to handle scenarios
+					//where the versions may be different but the state change can still occur.
+					if(currentVersion != expectedVersion)
 					{
 						transaction.rollback();
 						
@@ -78,23 +82,20 @@ public class SimpleEventStore implements EventStore {
 				//convert all of the new events to json for storage
 				for(Event event : events){
 					
+					//increment the current version
+					currentVersion++;
+					
 					String eventJson = gson.toJson(event);
 					String kind = event.getClass().getName();
 					
-					EventModel newEvent = new EventModel(kind, eventJson, new Long(expectedVersion));
+					EventModel newEvent = new EventModel(kind, eventJson, new Long(currentVersion));
 					
 					String json = gson.toJson(newEvent);
 					entityEvents.add(json);
-					
-					//increment the expected version
-					expectedVersion++;
 				}
 				
 				entity.setUnindexedProperty(EVENTS_PROPERTY, entityEvents);
-				
-				
 				dataStore.put(entity);
-				
 				transaction.commit();
 				
 				//for(Event event : events){

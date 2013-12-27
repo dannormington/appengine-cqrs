@@ -1,15 +1,14 @@
 package com.simplecqrs.appengine.example;
 
-public class AttendeeRegistrationResult {
-	
+public class ServiceResult {
 	private String error = null;
 	private boolean success = false;
 	
-	public AttendeeRegistrationResult(){
+	public ServiceResult(){
 		success = true;
 	}
 	
-	public AttendeeRegistrationResult(String error){
+	public ServiceResult(String error){
 		this.error = error;
 		this.success = false;
 	}

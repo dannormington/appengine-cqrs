@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.messaging.Event;
+import com.simplecqrs.appengine.messaging.MessageLog;
 
 /**
  * Base class for aggregate root implementations
@@ -64,7 +65,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	}
 	
 	@Override
-	public void loadFromHistory(Iterable<Event> history) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void loadFromHistory(Iterable<Event> history) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
 		if(history != null){
 			for(Event event : history){
@@ -77,12 +78,11 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * Apply the event assuming it is new
 	 * 
 	 * @param event
-	 * @throws NoSuchMethodException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	protected void applyChange(Event event) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	protected void applyChange(Event event) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		applyChange(event,true);
 	}
 	
@@ -91,21 +91,37 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * 
 	 * @param event
 	 * @param isNew
-	 * @throws NoSuchMethodException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	private void applyChange(Event event, boolean isNew) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private void applyChange(Event event, boolean isNew) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		Method method = this.getClass().getDeclaredMethod("apply", event.getClass());
-		method.setAccessible(true);
-		method.invoke(this,event);
+		Method method = null;
 		
-		expectedVersion++;
-			
+		try {
+			method = this.getClass().getDeclaredMethod("apply", event.getClass());
+		} catch (NoSuchMethodException e) {
+			//do nothing. This just means that the method signature wasn't found and
+			//the aggregate doesn't need to apply any state changes since it wasn't
+			//implemented.
+			MessageLog.log(String.format("apply method not found in %s for %s", this.getClass(), event.getClass()));
+		} catch (SecurityException e) {
+			MessageLog.log(e);
+			throw e;
+		}
+		
+		if(method != null){
+			method.setAccessible(true);
+			method.invoke(this,event);	
+		}
+		
 		if(isNew){
 			changes.add(event);
+		}else{
+			expectedVersion++;
 		}
+		
 	}
 }
+
