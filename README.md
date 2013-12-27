@@ -21,3 +21,7 @@ located at https://github.com/gregoryyoung/m-r
 	* Check "Enable local HRD support"
 	* Uncheck "Use Datanucleus JDO/JPA to access the datastore"
 	* Click OK
+
+##Notes
+This implemenation is still missing the message bus portion that will
+publish domain events using GAE task or deferred queues.
