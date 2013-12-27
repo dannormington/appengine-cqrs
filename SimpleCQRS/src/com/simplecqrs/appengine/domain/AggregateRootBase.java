@@ -70,6 +70,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 		if(history != null){
 			for(Event event : history){
 				applyChange(event, false);
+				expectedVersion++;
 			}
 		}
 	}
@@ -118,10 +119,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 		
 		if(isNew){
 			changes.add(event);
-		}else{
-			expectedVersion++;
 		}
-		
 	}
 }
 
