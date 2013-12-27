@@ -6,6 +6,7 @@ package com.simplecqrs.appengine.persistence;
 public class EventModel {
 	private String kind = null;
 	private String json = null;
+	private Long version = null;
 	
 	/**
 	 * Default constructor
@@ -19,10 +20,12 @@ public class EventModel {
 	 * 
 	 * @param kind
 	 * @param json
+	 * @param version
 	 */
-	public EventModel(String kind, String json){
+	public EventModel(String kind, String json, Long version){
 		this.kind = kind;
 		this.json = json;
+		this.version = version;
 	}
 	
 	/**
@@ -39,5 +42,14 @@ public class EventModel {
 	 */
 	public String getJson(){
 		return this.json;
+	}
+	
+	/**
+	 * Get the version
+	 * 
+	 * @return
+	 */
+	public Long getVersion(){
+		return this.version;
 	}
 }

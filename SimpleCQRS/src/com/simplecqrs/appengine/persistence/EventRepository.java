@@ -26,7 +26,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 	
 	public EventRepository(Class<T> aClass){
 		this.aClass = aClass;
-		eventStore = new SimpleEventStore(aClass.getSimpleName());
+		eventStore = new SimpleEventStore();
 	}
 	
 	@Override

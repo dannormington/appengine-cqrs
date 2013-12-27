@@ -25,26 +25,12 @@ public class SimpleEventStore implements EventStore {
 	/**
 	 * The name of the kind/schema
 	 */
-	private String schema = null;
+	private static final String KIND = "EventStore";
 	
 	/**
 	 * Property name for the list of events in storage
 	 */
-	private static final String EVENTS_PROPERTY = "events";
-	
-	/**
-	 * Property name for the current version in storage
-	 */
-	private static final String VERSION_PROPERTY = "version";
-	
-	/**
-	 * Default Constructor
-	 * 
-	 * @param schema
-	 */
-	public SimpleEventStore(String schema){
-		this.schema = schema;
-	}
+	private static final String EVENTS_PROPERTY = "Events";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -58,7 +44,7 @@ public class SimpleEventStore implements EventStore {
 				DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
 				transaction = dataStore.beginTransaction();
 				
-				Key key = KeyFactory.createKey(schema, aggregateId.toString());		
+				Key key = KeyFactory.createKey(KIND, aggregateId.toString());		
 				Entity entity = null;
 				
 				try {
@@ -70,13 +56,14 @@ public class SimpleEventStore implements EventStore {
 				List<String> entityEvents = null;
 				
 				if(entity == null){
-					entity = new Entity(schema, aggregateId.toString());
+					entity = new Entity(KIND, aggregateId.toString());
 					entityEvents = new ArrayList<String>();
 				}
 				else{
-					long currentVersion = (long) entity.getProperty(VERSION_PROPERTY);
-					
+				
 					entityEvents = (List<String>)entity.getProperty(EVENTS_PROPERTY);
+					
+					long currentVersion = entityEvents.size();
 					
 					if(currentVersion >= expectedVersion)
 					{
@@ -94,14 +81,18 @@ public class SimpleEventStore implements EventStore {
 					String eventJson = gson.toJson(event);
 					String kind = event.getClass().getName();
 					
-					EventModel newEvent = new EventModel(kind, eventJson);
+					EventModel newEvent = new EventModel(kind, eventJson, new Long(expectedVersion));
 					
 					String json = gson.toJson(newEvent);
 					entityEvents.add(json);
+					
+					//increment the expected version
+					expectedVersion++;
 				}
 				
 				entity.setUnindexedProperty(EVENTS_PROPERTY, entityEvents);
-				entity.setProperty(VERSION_PROPERTY, entityEvents.size());
+				
+				
 				dataStore.put(entity);
 				
 				transaction.commit();
@@ -117,26 +108,12 @@ public class SimpleEventStore implements EventStore {
 			}
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	@Override
-	public Iterable<Event> getEvents(UUID aggregateId) {
-
-		DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
+	private List<Event> hydrateEvents(Entity entity){
 		
-		Key key = KeyFactory.createKey(schema, aggregateId.toString());		
-		Entity entity = null;
-		
-		try {
-			entity = dataStore.get(key);
-		} catch (EntityNotFoundException e) {
-			/*
-			 * Return null because this entity doesn't exist in the store
-			 */
-			return null;
-		}
-
 		Gson gson = new Gson();
+		
 		List<String> events = (List<String>)entity.getProperty(EVENTS_PROPERTY);
 		List<Event> history = new ArrayList<Event>();
 		
@@ -157,5 +134,25 @@ public class SimpleEventStore implements EventStore {
 		}
 		
 		return history;
+	}
+
+	@Override
+	public Iterable<Event> getEvents(UUID aggregateId) {
+
+		DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
+		
+		Key key = KeyFactory.createKey(KIND, aggregateId.toString());		
+		Entity entity = null;
+		
+		try {
+			entity = dataStore.get(key);
+		} catch (EntityNotFoundException e) {
+			/*
+			 * Return null because this entity doesn't exist in the store
+			 */
+			return null;
+		}
+
+		return hydrateEvents(entity);
 	}
 }
