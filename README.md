@@ -3,6 +3,9 @@ Google App Engine / CQRS
 
 CQRS pattern implemented using Google App Engine technologies
 
+This implemenatation is based off of Greg Young's Simple CQRS example
+located at https://github.com/gregoryyoung/m-r
+
 ##Required SDKs
 - Google App Engine (This example uses 1.8.8)
 - Java SE 7
