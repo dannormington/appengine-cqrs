@@ -11,7 +11,7 @@ CQRS pattern implemented using Google App Engine technologies
 - Right click in package explorer and select Import
 - Browse to path where you cloned repository
 - Import both SimpleCQRS and SampleAppEngine
-- You will notice after importing that the SampleAppEngine may have an error marked on the project.
+- You will notice after importing that the SampleAppEngine project may have the standard red "x" error displayed. To fix this issue take the following steps:
 	* Right click on SampleAppEngine project and select properties
 	* Expand Google and select App Engine
 	* Check the "Use Google App Engine"
