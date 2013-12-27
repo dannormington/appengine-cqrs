@@ -111,7 +111,7 @@ public class AppEngineEventStore implements EventStore {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<Event> hydrateEvents(Entity entity){
+	private List<Event> hydrateEvents(Entity entity) throws AggregateHydrationException{
 		
 		Gson gson = new Gson();
 		
@@ -127,10 +127,9 @@ public class AppEngineEventStore implements EventStore {
 				Event event = (Event) gson.fromJson(model.getJson(), Class.forName(model.getKind()));
 				history.add(event);
 				
-			} catch (JsonSyntaxException e) {
+			} catch (JsonSyntaxException | ClassNotFoundException e) {
 				MessageLog.log(e);
-			} catch (ClassNotFoundException e) {
-				MessageLog.log(e);
+				throw new AggregateHydrationException(UUID.fromString(entity.getKey().toString()));
 			}
 		}
 		
@@ -138,7 +137,7 @@ public class AppEngineEventStore implements EventStore {
 	}
 
 	@Override
-	public Iterable<Event> getEvents(UUID aggregateId) {
+	public Iterable<Event> getEvents(UUID aggregateId) throws AggregateHydrationException {
 
 		DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
 		

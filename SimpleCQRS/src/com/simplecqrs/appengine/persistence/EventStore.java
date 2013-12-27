@@ -10,20 +10,22 @@ import com.simplecqrs.appengine.messaging.Event;
 public interface EventStore {
 	
 	/**
-	 * Persist the events to the ES
+	 * Persist the changes
 	 * 
 	 * @param aggregateId
 	 * @param expectedVersion
 	 * @param events
+	 * @throws EventCollisionException
 	 */
 	void saveEvents(UUID aggregateId, int expectedVersion, Iterable<Event> events) throws EventCollisionException;
 	
 	/**
-	 * Get the events from the ES. If there aren't any events null is returned
+	 * Retrieves the events
 	 * 
 	 * @param aggregateId
 	 * @return
+	 * @throws AggregateHydrationException
 	 */
-	Iterable<Event> getEvents(UUID aggregateId); 
+	Iterable<Event> getEvents(UUID aggregateId) throws AggregateHydrationException; 
 }
 

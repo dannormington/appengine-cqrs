@@ -1,6 +1,5 @@
 package com.simplecqrs.appengine.persistence;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.domain.AggregateRoot;
@@ -13,9 +12,10 @@ import com.simplecqrs.appengine.domain.AggregateRoot;
 public interface Repository<T extends AggregateRoot> {
 	
 	/**
-	 * Save the aggregate
+	 * Persists the aggregate
 	 * 
 	 * @param aggregate
+	 * @throws EventCollisionException
 	 */
 	void save(T aggregate) throws EventCollisionException;
 	
@@ -24,11 +24,7 @@ public interface Repository<T extends AggregateRoot> {
 	 * 
 	 * @param id
 	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws AggregateHydrationException
 	 */
-	T getById(UUID id) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+	T getById(UUID id) throws AggregateHydrationException;
 }

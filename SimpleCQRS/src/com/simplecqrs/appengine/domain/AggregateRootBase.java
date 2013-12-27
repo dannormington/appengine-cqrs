@@ -65,7 +65,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	}
 	
 	@Override
-	public void loadFromHistory(Iterable<Event> history) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void loadFromHistory(Iterable<Event> history) {
 		
 		if(history != null){
 			for(Event event : history){
@@ -83,7 +83,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	protected void applyChange(Event event) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	protected void applyChange(Event event) {
 		applyChange(event,true);
 	}
 	
@@ -96,7 +96,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	private void applyChange(Event event, boolean isNew) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private void applyChange(Event event, boolean isNew) {
 		
 		Method method = null;
 		
@@ -109,12 +109,17 @@ public abstract class AggregateRootBase implements AggregateRoot {
 			MessageLog.log(String.format("apply method not found in %s for %s", this.getClass(), event.getClass()));
 		} catch (SecurityException e) {
 			MessageLog.log(e);
-			throw e;
+			return;
 		}
 		
 		if(method != null){
 			method.setAccessible(true);
-			method.invoke(this,event);	
+			try {
+				method.invoke(this,event);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				MessageLog.log(e);
+				return;
+			}	
 		}
 		
 		if(isNew){

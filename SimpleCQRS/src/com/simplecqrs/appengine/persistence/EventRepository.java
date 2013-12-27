@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.simplecqrs.appengine.domain.AggregateRoot;
 import com.simplecqrs.appengine.messaging.Event;
+import com.simplecqrs.appengine.messaging.MessageLog;
 
 /**
  * Implementation of a simple event repository
@@ -36,7 +37,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 	}
 
 	@Override
-	public T getById(UUID id) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public T getById(UUID id) throws AggregateHydrationException {
 		
 		T aggregate = null;
 
@@ -55,15 +56,20 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 		 * create a new instance of the object by calling
 		 * the constructor that takes the aggregate's id
 		 */
-		Constructor<T> constructor = aClass.getDeclaredConstructor(UUID.class);
-		constructor.setAccessible(true);
-		aggregate = constructor.newInstance(id);
+		Constructor<T> constructor = null;
 		
-		/*
-		 * load the aggregate with the events
-		 */
-		aggregate.loadFromHistory(history);
-			
+		try {
+			constructor = aClass.getDeclaredConstructor(UUID.class);
+			constructor.setAccessible(true);
+			aggregate = constructor.newInstance(id);
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			MessageLog.log(e);
+		}
+		
+		if(aggregate != null){
+			aggregate.loadFromHistory(history);
+		}
+		
 		return aggregate;
 	}
 }

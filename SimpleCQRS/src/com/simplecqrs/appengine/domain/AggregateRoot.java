@@ -1,6 +1,5 @@
 package com.simplecqrs.appengine.domain;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.messaging.Event;
@@ -33,12 +32,8 @@ public interface AggregateRoot {
 	 * load the aggregate root
 	 * 
 	 * @param history
-	 * @throws NoSuchMethodException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
 	 */
-	void loadFromHistory(Iterable<Event> history) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+	void loadFromHistory(Iterable<Event> history);
 	
 	/**
 	 * Returns the version of the aggregate when it was hydrated
