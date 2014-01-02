@@ -1,8 +1,8 @@
 package com.simplecqrs.appengine.example.handlers;
 
 import com.google.common.eventbus.Subscribe;
-import com.simplecqrs.appengine.example.ChangeAttendeeNameCommand;
-import com.simplecqrs.appengine.example.RegisterAttendeeCommand;
+import com.simplecqrs.appengine.example.commands.ChangeAttendeeNameCommand;
+import com.simplecqrs.appengine.example.commands.RegisterAttendeeCommand;
 import com.simplecqrs.appengine.example.domain.Attendee;
 import com.simplecqrs.appengine.messaging.MessageLog;
 import com.simplecqrs.appengine.persistence.AggregateHydrationException;

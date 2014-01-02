@@ -8,9 +8,10 @@ public class ServiceResult {
 		success = true;
 	}
 	
-	public ServiceResult(String error){
-		this.error = error;
-		this.success = false;
+	public ServiceResult(Exception exception){
+		if(exception != null){
+			this.error = exception.getMessage();
+		}
 	}
 	
 	public boolean getSuccess(){

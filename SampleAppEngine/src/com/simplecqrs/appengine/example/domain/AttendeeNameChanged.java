@@ -1,10 +1,14 @@
 package com.simplecqrs.appengine.example.domain;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.messaging.Event;
 
-public class AttendeeNameChanged implements Event{
+public class AttendeeNameChanged implements Event, Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
 	private UUID attendeeId;
 	private String firstName;
 	private String lastName;

@@ -1,4 +1,4 @@
-package com.simplecqrs.appengine.example;
+package com.simplecqrs.appengine.example.commands;
 
 import java.util.UUID;
 
