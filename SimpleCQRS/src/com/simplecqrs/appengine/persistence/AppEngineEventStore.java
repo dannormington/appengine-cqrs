@@ -14,6 +14,7 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.simplecqrs.appengine.messaging.Event;
+import com.simplecqrs.appengine.messaging.MessageBus;
 import com.simplecqrs.appengine.messaging.MessageLog;
 
 /**
@@ -98,10 +99,10 @@ public class AppEngineEventStore implements EventStore {
 				dataStore.put(entity);
 				transaction.commit();
 				
-				//for(Event event : events){
+				for(Event event : events){
 					//Publish the event for listeners
-					//MessageBus.getInstance().publish(event);
-				//}
+					MessageBus.getInstance().publish(event);
+				}
 
 			} catch (Exception e){
 				if(transaction != null &&  transaction.isActive())

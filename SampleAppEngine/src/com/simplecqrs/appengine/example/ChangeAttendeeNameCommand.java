@@ -2,7 +2,9 @@ package com.simplecqrs.appengine.example;
 
 import java.util.UUID;
 
-public class ChangeAttendeeNameCommand {
+import com.simplecqrs.appengine.messaging.Command;
+
+public class ChangeAttendeeNameCommand implements Command{
 	private String firstName = null;
 	private String lastName = null;
 	private UUID attendeeId = null;

@@ -25,6 +25,11 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 	 */
 	private Class<T> aClass;
 	
+	/**
+	 * Default constructor
+	 * 
+	 * @param aClass
+	 */
 	public EventRepository(Class<T> aClass){
 		this.aClass = aClass;
 		eventStore = new AppEngineEventStore();

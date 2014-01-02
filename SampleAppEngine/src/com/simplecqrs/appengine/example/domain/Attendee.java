@@ -13,13 +13,15 @@ public class Attendee extends AggregateRootBase {
 	public Attendee(UUID attendeeId, String firstName, String lastName) {
 		this(attendeeId);
 		
-		//perform validation checks here
+		//perform validation checks here before calling applyChange
+		
 		applyChange(new AttendeeRegistered(attendeeId, firstName, lastName));
 	}
 	
 	public void changeName(String firstName, String lastName){
 		
-		//perform validation checks here
+		//perform validation checks here before calling applyChange
+		
 		applyChange(new AttendeeNameChanged(this.getId(), firstName, lastName));
 	}
 }

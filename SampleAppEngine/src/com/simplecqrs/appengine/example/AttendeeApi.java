@@ -2,7 +2,7 @@ package com.simplecqrs.appengine.example;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.simplecqrs.appengine.example.services.AttendeeService;
+import com.simplecqrs.appengine.messaging.MessageBus;
 
 @Api(
 		name="thatconference",
@@ -18,17 +18,27 @@ public class AttendeeApi {
 	)
 	public ServiceResult register(RegisterAttendeeCommand command) {
 		
-		AttendeeService service = new AttendeeService();
-		return service.register(command.getAttendeeId(), command.getFirstName(), command.getLastName());
+		try{
+			MessageBus.getInstance().send(command);	
+		}catch(Exception e){
+			return new ServiceResult(e.getMessage());
+		}
+		
+		return new ServiceResult();
 	}
 	
 	@ApiMethod(
 			httpMethod = "POST",
 			path = "changename"
 		)
-		public ServiceResult changeName(ChangeAttendeeNameCommand command) {
+	public ServiceResult changeName(ChangeAttendeeNameCommand command) {
 			
-			AttendeeService service = new AttendeeService();
-			return service.changeAttendeeName(command.getAttendeeId(), command.getFirstName(), command.getLastName());
+		try{
+			MessageBus.getInstance().send(command);	
+		}catch(Exception e){
+			return new ServiceResult(e.getMessage());
 		}
+		
+		return new ServiceResult();
+	}
 }

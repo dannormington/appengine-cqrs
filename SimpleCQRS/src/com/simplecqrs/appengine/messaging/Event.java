@@ -1,7 +1,7 @@
 package com.simplecqrs.appengine.messaging;
 
 /**
- * Interface for all events to implement
+ * Interface for an event
  */
 public interface Event extends Message {
 

@@ -2,10 +2,12 @@ package com.simplecqrs.appengine.example;
 
 import java.util.UUID;
 
+import com.simplecqrs.appengine.messaging.Command;
+
 /**
  * Simple command to register an attendee
  */
-public class RegisterAttendeeCommand {
+public class RegisterAttendeeCommand implements Command {
 	
 	private String firstName = null;
 	private String lastName = null;

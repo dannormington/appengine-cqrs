@@ -5,8 +5,11 @@ import java.util.UUID;
 /**
  * Exception that is thrown when the hydration of an aggregate fails.
  */
-@SuppressWarnings("serial")
 public class AggregateHydrationException extends Exception {
+	
+	private static final String ERROR_TEXT = "Loading the data failed";
+	
+	private static final long serialVersionUID = 1L;
 	
 	private UUID aggregateId;
 	
@@ -16,6 +19,7 @@ public class AggregateHydrationException extends Exception {
 	 * @param aggregateId
 	 */
 	public AggregateHydrationException(UUID aggregateId){
+		super(ERROR_TEXT);
 		this.aggregateId = aggregateId;
 	}
 	

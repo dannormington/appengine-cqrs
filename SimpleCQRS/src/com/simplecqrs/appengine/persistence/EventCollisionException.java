@@ -7,9 +7,12 @@ import java.util.UUID;
  * Exception that is thrown when an event is attempted to be persisted
  * but the current event history has changed
  */
-@SuppressWarnings("serial")
 public class EventCollisionException extends Exception {
 
+	private static final String ERROR_TEXT = "Data has been changed between loading and state changes.";
+	
+	private static final long serialVersionUID = 1L;
+	
 	private UUID aggregateId;
 	private int expectedVersion;
 	private Date dateOccurred;
@@ -21,6 +24,7 @@ public class EventCollisionException extends Exception {
 	 * @param expectedVersion
 	 */
 	public EventCollisionException(UUID aggregateId, int expectedVersion){
+		super(ERROR_TEXT);
 		this.aggregateId = aggregateId;
 		this.expectedVersion = expectedVersion;
 		this.dateOccurred = new Date();

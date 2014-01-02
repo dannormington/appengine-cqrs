@@ -17,7 +17,9 @@ public interface AggregateRoot {
 	UUID getId();
 	
 	/**
-	 * get the aggregates events
+	 * Gets all change events since the
+	 * original hydration. If there are no
+	 * changes then null is returned
 	 * 
 	 * @return
 	 */
