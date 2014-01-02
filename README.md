@@ -7,7 +7,7 @@ This implemenatation is based off of Greg Young's Simple CQRS example
 located at https://github.com/gregoryyoung/m-r
 
 
-##Required SDKs and Plugins
+##Required SDKs, Plugins, and Libraries
 - Install Google Plugin for Eclipse and Google App Engine SDK
 	* From Eclipse:
 		* Help -> Install New Software...
@@ -20,6 +20,10 @@ located at https://github.com/gregoryyoung/m-r
 			* This example was developed using version 1.8.8 but this isn't required.
 - Java SE 7
 	* http://www.oracle.com/technetwork/java/javase/downloads/index.html
+- google-gson
+	* https://code.google.com/p/google-gson/
+- guava-libraries
+	* https://code.google.com/p/guava-libraries/
 
 ##Import Instructions for Eclipse
 - Right click in package explorer and select Import
