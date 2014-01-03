@@ -14,6 +14,10 @@ public class ServiceResult {
 		}
 	}
 	
+	public ServiceResult(String error){
+		this.error = error;
+	}
+	
 	public boolean getSuccess(){
 		return success;
 	}

@@ -10,18 +10,30 @@ public class Attendee extends AggregateRootBase {
 		super(attendeeId);
 	}
 	
-	public Attendee(UUID attendeeId, String firstName, String lastName) {
+	private Attendee(UUID attendeeId, String email, String firstName, String lastName)  throws IllegalArgumentException {
 		this(attendeeId);
-		
-		//perform validation checks here before calling applyChange
-		
-		applyChange(new AttendeeRegistered(attendeeId, firstName, lastName));
+
+		applyChange(new AttendeeRegistered(attendeeId, email, firstName, lastName));
 	}
 	
-	public void changeName(String firstName, String lastName){
+	public void changeName(String firstName, String lastName) throws IllegalArgumentException {
 		
 		//perform validation checks here before calling applyChange
+		if(firstName != null && lastName != null)
+			applyChange(new AttendeeNameChanged(this.getId(), firstName, lastName));
+		else
+			throw new IllegalArgumentException();
+	}
+	
+	public void disable(){
+		applyChange(new AttendeeDisabled(this.getId()));
+	}
+	
+	public static Attendee create(UUID attendeeId, String email, String firstName, String lastName){
+	
+		if(email != null && firstName != null && lastName != null)
+			return new Attendee(attendeeId, email, firstName, lastName);
 		
-		applyChange(new AttendeeNameChanged(this.getId(), firstName, lastName));
+		return null;
 	}
 }

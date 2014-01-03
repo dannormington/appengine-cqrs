@@ -21,7 +21,7 @@ public class AttendeeApi {
 	public ServiceResult register(RegisterAttendeeCommand command) {
 		
 		try{
-			MessageBus.getInstance().send(command);	
+			MessageBus.getInstance().send(command);
 		}catch(Exception e){
 			return new ServiceResult(e);
 		}

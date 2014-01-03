@@ -9,6 +9,7 @@ import com.simplecqrs.appengine.messaging.Command;
  */
 public class RegisterAttendeeCommand implements Command {
 	
+	private String email = null;
 	private String firstName = null;
 	private String lastName = null;
 	private UUID attendeeId = null;
@@ -26,8 +27,9 @@ public class RegisterAttendeeCommand implements Command {
 	 * @param firstName
 	 * @param lastName
 	 */
-	public RegisterAttendeeCommand(String firstName, String lastName){
+	public RegisterAttendeeCommand(String email, String firstName, String lastName){
 		this();
+		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
@@ -42,5 +44,9 @@ public class RegisterAttendeeCommand implements Command {
 	
 	public String getLastName(){
 		return lastName;
+	}
+	
+	public String getEmail(){
+		return email;
 	}
 }

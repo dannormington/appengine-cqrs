@@ -4,6 +4,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.common.eventbus.Subscribe;
+import com.simplecqrs.appengine.example.domain.AttendeeDisabled;
 import com.simplecqrs.appengine.example.domain.AttendeeNameChanged;
 import com.simplecqrs.appengine.example.domain.AttendeeRegistered;
 
@@ -34,6 +35,11 @@ public class EventHandlers {
 	@Subscribe
 	public void handle(AttendeeNameChanged event){
         queue.addAsync(TaskOptions.Builder.withPayload(new HandleAttendeeNameChangedTask(event)));
+	}
+	
+	@Subscribe
+	public void handle(AttendeeDisabled event){
+		queue.addAsync(TaskOptions.Builder.withPayload(new HandleAttendeeDisabledTask(event)));
 	}
 }
 
