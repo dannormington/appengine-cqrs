@@ -16,8 +16,8 @@ public class ApplicationContextListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		MessageBus.getInstance().registerCommands(new CommandHandlers());
-		MessageBus.getInstance().registerEvents(new EventHandlers());
+		MessageBus.getInstance().register(new CommandHandlers());
+		MessageBus.getInstance().register(new EventHandlers());
 	}
 
 }

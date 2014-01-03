@@ -1,19 +1,16 @@
 package com.simplecqrs.appengine.messaging;
 
 import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.EventBus;
 
 /**
  * Simple wrapper around guava eventbus for handling commands and event publishing
  */
 public class MessageBus{
 	
-	private AsyncEventBus asyncEventBus;
-	private EventBus commandBus;
+	private AsyncEventBus eventBus;
 	
-	private MessageBus(EventBus eventBus, AsyncEventBus asyncEventBus){
-		this.commandBus = eventBus;
-		this.asyncEventBus = asyncEventBus;
+	private MessageBus(AsyncEventBus eventBus){
+		this.eventBus = eventBus;
 	}
 	
 	/**
@@ -25,21 +22,12 @@ public class MessageBus{
 	}
 	
 	/**
-	 * Register commands
+	 * Register events/commands
 	 * 
 	 * @param object
 	 */
-	public void registerCommands(Object object){
-		commandBus.register(object);
-	}
-	
-	/**
-	 * Register events
-	 * 
-	 * @param object
-	 */
-	public void registerEvents(Object object){
-		asyncEventBus.register(object);
+	public void register(Object object){
+		eventBus.register(object);
 	}
 	
 	/**
@@ -48,16 +36,16 @@ public class MessageBus{
 	 * @param event
 	 */
 	public void publish(Event event){
-		asyncEventBus.post(event);
+		eventBus.post(event);
 	}
 	
 	/**
-	 * Process the command synchronously
+	 * Process the command asynchronously
 	 * 
 	 * @param command
 	 */
 	public void send(Command command){
-		commandBus.post(command);
+		eventBus.post(command);
 	}
 	
 	/**
@@ -66,8 +54,7 @@ public class MessageBus{
 	 * @return
 	 */
 	private static MessageBus create(){
-		AsyncEventBus asyncEventBus = new AsyncEventBus(new ThreadExecutor());
-		return new MessageBus(new EventBus(),asyncEventBus);
+		return new MessageBus(new AsyncEventBus(new ThreadExecutor()));
 	}
 	
 	private static class InstanceHolder{
