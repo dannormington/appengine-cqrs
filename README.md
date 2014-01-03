@@ -6,6 +6,23 @@ CQRS pattern implemented using Google App Engine technologies
 This implemenatation is based off of Greg Young's Simple CQRS example
 located at https://github.com/gregoryyoung/m-r
 
+##App Engine Technologies
+- Datastore
+	* https://developers.google.com/appengine/docs/java/datastore/
+	* App Engine Datastore is a schemaless object datastore providing
+	  robust, scalable storage for your web application, with the
+	  following features:
+
+		* No planned downtime
+		* Atomic transactions
+		* High availability of reads and writes
+		* Strong consistency for reads and ancestor queries
+		* Eventual consistency for all other queries
+- Task Queue
+	* https://developers.google.com/appengine/docs/java/taskqueue/
+- Google Cloud Endpoints
+	* https://developers.google.com/appengine/docs/java/endpoints/
+
 
 ##Required SDKs, Plugins, and Libraries
 - Install Google Plugin for Eclipse and Google App Engine SDK
