@@ -7,6 +7,10 @@ import com.simplecqrs.appengine.example.handlers.CommandHandlers;
 import com.simplecqrs.appengine.example.handlers.EventHandlers;
 import com.simplecqrs.appengine.messaging.MessageBus;
 
+/**
+ * Custom listener to handle command/event registration with the message
+ * bus during warm-up
+ */
 public class ApplicationContextListener implements ServletContextListener {
 
 	@Override

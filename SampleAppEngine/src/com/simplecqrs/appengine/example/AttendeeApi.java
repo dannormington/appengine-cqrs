@@ -2,8 +2,8 @@ package com.simplecqrs.appengine.example;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.simplecqrs.appengine.example.commands.ChangeAttendeeNameCommand;
-import com.simplecqrs.appengine.example.commands.RegisterAttendeeCommand;
+import com.simplecqrs.appengine.example.commands.ChangeAttendeeName;
+import com.simplecqrs.appengine.example.commands.RegisterAttendee;
 import com.simplecqrs.appengine.messaging.MessageBus;
 
 @Api(
@@ -18,7 +18,7 @@ public class AttendeeApi {
 		httpMethod = "POST",
 		path = "register"
 	)
-	public ServiceResult register(RegisterAttendeeCommand command) {
+	public ServiceResult register(RegisterAttendee command) {
 		
 		try{
 			MessageBus.getInstance().send(command);
@@ -33,7 +33,7 @@ public class AttendeeApi {
 			httpMethod = "POST",
 			path = "changename"
 		)
-	public ServiceResult changeName(ChangeAttendeeNameCommand command) {
+	public ServiceResult changeName(ChangeAttendeeName command) {
 			
 		try{
 			MessageBus.getInstance().send(command);	

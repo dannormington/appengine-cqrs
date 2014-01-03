@@ -1,26 +1,41 @@
 package com.simplecqrs.appengine.example.handlers;
 
 import com.google.common.eventbus.Subscribe;
-import com.simplecqrs.appengine.example.commands.ChangeAttendeeNameCommand;
-import com.simplecqrs.appengine.example.commands.RegisterAttendeeCommand;
+import com.simplecqrs.appengine.example.commands.ChangeAttendeeName;
+import com.simplecqrs.appengine.example.commands.RegisterAttendee;
 import com.simplecqrs.appengine.example.commands.ResolveDuplicateEmail;
 import com.simplecqrs.appengine.example.domain.Attendee;
+import com.simplecqrs.appengine.example.domain.DisableReason;
 import com.simplecqrs.appengine.messaging.MessageLog;
 import com.simplecqrs.appengine.persistence.AggregateHydrationException;
 import com.simplecqrs.appengine.persistence.EventCollisionException;
 import com.simplecqrs.appengine.persistence.EventRepository;
 import com.simplecqrs.appengine.persistence.Repository;
 
+/**
+ * Class that handles all commands
+ */
 public class CommandHandlers {
 	
+	/**
+	 * Instance of a repository
+	 */
 	Repository<Attendee> repository = null;
 	
+	/**
+	 * Default constructor
+	 */
 	public CommandHandlers(){
 		repository = new EventRepository<Attendee>(Attendee.class);
 	}
 
+	/**
+	 * Handle the {@link RegisterAttendee} command
+	 * 
+	 * @param command
+	 */
 	@Subscribe
-	public void handle(RegisterAttendeeCommand command) {
+	public void handle(RegisterAttendee command) {
 		
 		Attendee attendee = Attendee.create(command.getAttendeeId(), command.getEmail(), command.getFirstName(), command.getLastName());
 		
@@ -34,8 +49,12 @@ public class CommandHandlers {
 		}
 	}
 	
+	/**
+	 * Handle the {@link ChangeAttendeeName} command
+	 * @param command
+	 */
 	@Subscribe
-	public void handle(ChangeAttendeeNameCommand command) {
+	public void handle(ChangeAttendeeName command) {
 		
 		Attendee attendee = null;
 		try {
@@ -62,6 +81,10 @@ public class CommandHandlers {
 		}
 	}
 	
+	/**
+	 * Handle the {@link ResolveDuplicateEmail} command
+	 * @param command
+	 */
 	@Subscribe
 	public void handle(ResolveDuplicateEmail command){
 		Attendee attendee = null;
@@ -74,7 +97,7 @@ public class CommandHandlers {
 		
 		if(attendee != null){
 			
-			attendee.disable();
+			attendee.disable(DisableReason.DUPLICATE);
 			
 			try {
 				repository.save(attendee);

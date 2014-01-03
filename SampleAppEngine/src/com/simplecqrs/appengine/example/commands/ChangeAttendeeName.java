@@ -5,11 +5,9 @@ import java.util.UUID;
 import com.simplecqrs.appengine.messaging.Command;
 
 /**
- * Simple command to register an attendee
+ * Command to change an attendee's name
  */
-public class RegisterAttendeeCommand implements Command {
-	
-	private String email = null;
+public class ChangeAttendeeName implements Command{
 	private String firstName = null;
 	private String lastName = null;
 	private UUID attendeeId = null;
@@ -17,8 +15,7 @@ public class RegisterAttendeeCommand implements Command {
 	/**
 	 * Default constructor for serialization
 	 */
-	public RegisterAttendeeCommand(){
-		this.attendeeId = UUID.randomUUID();
+	public ChangeAttendeeName(){
 	}
 	
 	/**
@@ -27,26 +24,36 @@ public class RegisterAttendeeCommand implements Command {
 	 * @param firstName
 	 * @param lastName
 	 */
-	public RegisterAttendeeCommand(String email, String firstName, String lastName){
-		this();
-		this.email = email;
+	public ChangeAttendeeName(UUID attendeeId, String firstName, String lastName){
+		this.attendeeId = attendeeId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 	
+	/**
+	 * Get the attendee the Id
+	 * 
+	 * @return
+	 */
 	public UUID getAttendeeId(){
 		return attendeeId;
 	}
 	
+	/**
+	 * Get the first name
+	 * 
+	 * @return
+	 */
 	public String getFirstName(){
 		return firstName;
 	}
 	
+	/**
+	 * Get the last name
+	 * 
+	 * @return
+	 */
 	public String getLastName(){
 		return lastName;
-	}
-	
-	public String getEmail(){
-		return email;
 	}
 }

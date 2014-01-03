@@ -27,16 +27,31 @@ public class EventHandlers {
 		queue = QueueFactory.getQueue(DOMAIN_EVENTS_PROCESSING_QUEUE);
 	}
 	
+	/**
+	 * Handle the {@link AttendeeRegistered} event
+	 * 
+	 * @param event
+	 */
 	@Subscribe
 	public void handle(AttendeeRegistered event){
 		queue.addAsync(TaskOptions.Builder.withPayload(new HandleAttendeeRegisteredTask(event)));
 	}
 	
+	/**
+	 * Handle the {@link AttendeeNameChanged} event
+	 * 
+	 * @param event
+	 */
 	@Subscribe
 	public void handle(AttendeeNameChanged event){
         queue.addAsync(TaskOptions.Builder.withPayload(new HandleAttendeeNameChangedTask(event)));
 	}
 	
+	/**
+	 * Handle the {@link AttendeeDisabled} event
+	 * 
+	 * @param event
+	 */
 	@Subscribe
 	public void handle(AttendeeDisabled event){
 		queue.addAsync(TaskOptions.Builder.withPayload(new HandleAttendeeDisabledTask(event)));
