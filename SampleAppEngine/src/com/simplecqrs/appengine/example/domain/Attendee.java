@@ -48,6 +48,12 @@ public class Attendee extends AggregateRootBase {
 	public void changeName(String firstName, String lastName) throws IllegalArgumentException {
 		
 		/*
+		 * Don't bother checking for parameter validity if the attendee isn't enabled
+		 */
+		if(!isEnabled)
+			return;
+		
+		/*
 		 * Only change state if the data is valid 
 		 */
 		if(firstName != null && lastName != null)
