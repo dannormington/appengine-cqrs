@@ -53,7 +53,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 	}
 
 	@Override
-	public T getById(UUID id) throws AggregateHydrationException {
+	public T getById(UUID id) throws HydrationException {
 		
 		T aggregate = null;
 

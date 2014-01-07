@@ -1,6 +1,6 @@
 package com.simplecqrs.appengine.messaging;
 
-import com.simplecqrs.appengine.persistence.AggregateHydrationException;
+import com.simplecqrs.appengine.persistence.HydrationException;
 import com.simplecqrs.appengine.persistence.EventCollisionException;
 
 /**
@@ -15,6 +15,6 @@ public interface CommandHandler<T extends Command> {
 	 * @throws EventCollisionException
 	 * @throws AggregateHydrationException
 	 */
-	void handle(T command) throws EventCollisionException, AggregateHydrationException;
+	void handle(T command) throws EventCollisionException, HydrationException;
 }
 

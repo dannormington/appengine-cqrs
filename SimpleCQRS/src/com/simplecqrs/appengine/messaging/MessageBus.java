@@ -1,7 +1,7 @@
 package com.simplecqrs.appengine.messaging;
 
-import com.simplecqrs.appengine.persistence.AggregateHydrationException;
 import com.simplecqrs.appengine.persistence.EventCollisionException;
+import com.simplecqrs.appengine.persistence.HydrationException;
 
 /**
  * Interface for a simple message bus
@@ -46,5 +46,5 @@ public interface MessageBus{
 	 * @throws AggregateHydrationException 
 	 * @throws EventCollisionException 
 	 */
-	<T extends Command> void send(T command) throws EventCollisionException, AggregateHydrationException;
+	<T extends Command> void send(T command) throws EventCollisionException, HydrationException;
 }

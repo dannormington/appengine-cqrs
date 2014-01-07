@@ -11,7 +11,7 @@ import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.simplecqrs.appengine.persistence.AggregateHydrationException;
+import com.simplecqrs.appengine.persistence.HydrationException;
 import com.simplecqrs.appengine.persistence.EventCollisionException;
 
 /**
@@ -140,7 +140,7 @@ public class SimpleMessageBus implements MessageBus {
 	}
 
 	@Override
-	public <T extends Command> void send(T command) throws EventCollisionException, AggregateHydrationException {
+	public <T extends Command> void send(T command) throws EventCollisionException, HydrationException {
 		
 		if(command == null || commandHandlers.isEmpty())
 			return;

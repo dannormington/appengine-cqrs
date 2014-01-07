@@ -4,7 +4,10 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.simplecqrs.appengine.example.commands.ChangeAttendeeName;
 import com.simplecqrs.appengine.example.commands.RegisterAttendee;
+import com.simplecqrs.appengine.messaging.MessageLog;
 import com.simplecqrs.appengine.messaging.SimpleMessageBus;
+import com.simplecqrs.appengine.persistence.EventCollisionException;
+import com.simplecqrs.appengine.persistence.HydrationException;
 
 @Api(
 		name="thatconference",
@@ -20,9 +23,10 @@ public class AttendeeApi {
 	)
 	public ServiceResult register(RegisterAttendee command) {
 		
-		try{
+		try {
 			SimpleMessageBus.getInstance().send(command);
-		}catch(Exception e){
+		} catch (EventCollisionException | HydrationException e) {
+			MessageLog.log(e);
 			return new ServiceResult(e);
 		}
 		
@@ -37,7 +41,8 @@ public class AttendeeApi {
 			
 		try{
 			SimpleMessageBus.getInstance().send(command);	
-		}catch(Exception e){
+		}catch(EventCollisionException | HydrationException e){
+			MessageLog.log(e);
 			return new ServiceResult(e);
 		}
 		

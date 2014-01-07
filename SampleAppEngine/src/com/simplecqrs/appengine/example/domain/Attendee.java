@@ -52,7 +52,6 @@ public class Attendee extends AggregateRootBase {
 		 */
 		if(!isEnabled)
 			return;
-		
 		/*
 		 * Only change state if the data is valid 
 		 */

@@ -5,7 +5,7 @@ import com.simplecqrs.appengine.example.domain.Attendee;
 import com.simplecqrs.appengine.example.handlers.Constants;
 import com.simplecqrs.appengine.messaging.CommandHandler;
 import com.simplecqrs.appengine.messaging.MessageLog;
-import com.simplecqrs.appengine.persistence.AggregateHydrationException;
+import com.simplecqrs.appengine.persistence.HydrationException;
 import com.simplecqrs.appengine.persistence.EventCollisionException;
 import com.simplecqrs.appengine.persistence.EventRepository;
 import com.simplecqrs.appengine.persistence.Repository;
@@ -13,18 +13,11 @@ import com.simplecqrs.appengine.persistence.Repository;
 public class ChangeAttendeeNameCommandHandler implements CommandHandler<ChangeAttendeeName> {
 
 	@Override
-	public void handle(ChangeAttendeeName command) throws EventCollisionException, AggregateHydrationException {
+	public void handle(ChangeAttendeeName command) throws EventCollisionException, HydrationException {
 		
 		Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
 		
-		Attendee attendee = null;
-		try {
-			attendee = repository.getById(command.getAttendeeId());
-		} catch (AggregateHydrationException e) {
-			MessageLog.log(e);
-			throw e;
-			//in this situation you may want to publish an event to notify the user and/or administrators
-		}
+		Attendee attendee = repository.getById(command.getAttendeeId());
 		
 		if(attendee != null){
 			try{
@@ -34,15 +27,7 @@ public class ChangeAttendeeNameCommandHandler implements CommandHandler<ChangeAt
 				throw e;
 			}
 			
-			try {
-				repository.save(attendee);
-			} catch (EventCollisionException e) {
-				MessageLog.log(e);
-				throw e;
-				//in this situation you may want to publish an event to notify the user
-			}
+			repository.save(attendee);
 		}
-		
 	}
-
 }

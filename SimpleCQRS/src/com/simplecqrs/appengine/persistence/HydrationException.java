@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Exception that is thrown when the hydration of an aggregate fails.
  */
-public class AggregateHydrationException extends Exception {
+public class HydrationException extends Exception {
 	
 	private static final String ERROR_TEXT = "Loading the data failed";
 	
@@ -18,7 +18,7 @@ public class AggregateHydrationException extends Exception {
 	 * 
 	 * @param aggregateId
 	 */
-	public AggregateHydrationException(UUID aggregateId){
+	public HydrationException(UUID aggregateId){
 		super(ERROR_TEXT);
 		this.aggregateId = aggregateId;
 	}

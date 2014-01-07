@@ -26,6 +26,6 @@ public interface EventStore {
 	 * @return
 	 * @throws AggregateHydrationException
 	 */
-	Iterable<Event> getEvents(UUID aggregateId) throws AggregateHydrationException; 
+	Iterable<Event> getEvents(UUID aggregateId) throws HydrationException; 
 }
 

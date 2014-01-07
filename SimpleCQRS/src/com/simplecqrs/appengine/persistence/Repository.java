@@ -26,5 +26,5 @@ public interface Repository<T extends AggregateRoot> {
 	 * @return
 	 * @throws AggregateHydrationException
 	 */
-	T getById(UUID id) throws AggregateHydrationException;
+	T getById(UUID id) throws HydrationException;
 }

@@ -20,7 +20,7 @@ import com.simplecqrs.appengine.example.domain.AttendeeRegistered;
 import com.simplecqrs.appengine.messaging.EventHandler;
 import com.simplecqrs.appengine.messaging.MessageLog;
 import com.simplecqrs.appengine.messaging.SimpleMessageBus;
-import com.simplecqrs.appengine.persistence.AggregateHydrationException;
+import com.simplecqrs.appengine.persistence.HydrationException;
 import com.simplecqrs.appengine.persistence.EventCollisionException;
 
 /**
@@ -81,7 +81,7 @@ public class AttendeeRegisteredEventHandler extends EventHandler<AttendeeRegiste
     		if(duplicateExists){
     			try {
 					SimpleMessageBus.getInstance().send(new ResolveDuplicateEmail(event.getAttendeeId()));
-				} catch (EventCollisionException | AggregateHydrationException commandException) {
+				} catch (EventCollisionException | HydrationException commandException) {
 					MessageLog.log(commandException);
 					//may want to publish message to administrator
 				}
