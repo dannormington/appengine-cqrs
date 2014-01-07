@@ -3,7 +3,7 @@ package com.simplecqrs.appengine.messaging;
 import com.google.appengine.api.taskqueue.DeferredTask;
 
 /**
- * Class for handling a specific event
+ * Class for handling a specific event that will be published to a queue
  * 
  * @param <T>
  */
@@ -22,14 +22,5 @@ public abstract class EventHandler<T extends Event> implements DeferredTask {
 	 */
 	public EventHandler(T event){
 		this.event = event;
-	}
-	
-	/**
-	 * Get the event
-	 * 
-	 * @return
-	 */
-	public T getEvent(){
-		return event;
 	}
 }

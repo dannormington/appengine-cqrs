@@ -20,22 +20,44 @@ import com.simplecqrs.appengine.persistence.EventCollisionException;
  */
 public class SimpleMessageBus implements MessageBus {
 
+	/**
+	 * List of command handlers per command
+	 */
 	private Map<String, CommandHandler<? extends Command>> commandHandlers;
+	
+	/**
+	 * List of event handlers per event
+	 */
 	private Map<String, List<Class<? extends EventHandler<? extends Event>>>> eventHandlers;
 	
+	/**
+	 * Constructor
+	 */
 	private SimpleMessageBus(){
 		commandHandlers = new HashMap<String, CommandHandler<? extends Command>>();
 		eventHandlers = new HashMap<String, List<Class<? extends EventHandler<? extends Event>>>>();
 	}
 	
+	/**
+	 * Get the singleton instance
+	 * @return
+	 */
 	public static SimpleMessageBus getInstance(){
 		return InstanceHolder.INSTANCE;
 	}
 	
+	/**
+	 * Creates a new instance
+	 * 
+	 * @return
+	 */
 	private static SimpleMessageBus create(){
 		return new SimpleMessageBus();
 	}
 	
+	/**
+	 * Class to contain the singleton
+	 */
 	private static class InstanceHolder{
 		public static final SimpleMessageBus INSTANCE = SimpleMessageBus.create();
 	}
@@ -44,6 +66,10 @@ public class SimpleMessageBus implements MessageBus {
 	public <T extends Command> void registerCommandHandler(Class<T> aClass, CommandHandler<T> handler) {
 		String key = aClass.getName();
 		
+		/*
+		 * Register only if not found. Commands *should*
+		 * only be registered to a single handler
+		 */
 		if(!commandHandlers.containsKey(key)){
 			commandHandlers.put(key, handler);
 		}
@@ -66,6 +92,10 @@ public class SimpleMessageBus implements MessageBus {
 		publish(event, null);
 	}
 	
+	/**
+	 * Although the publish method is synchronous, the actual processing
+	 * of each event that is published to the queue is asynchronous.
+	 */
 	@Override
 	public <T extends Event> void publish(T event, String queue) {
 		if(event == null || eventHandlers.isEmpty())
@@ -87,8 +117,9 @@ public class SimpleMessageBus implements MessageBus {
 				
 			} catch (NoSuchMethodException | SecurityException e) {
 				MessageLog.log(e);
+				return;
 			}
-			
+		
 			constructor.setAccessible(true);
 		
 			try {
@@ -102,8 +133,7 @@ public class SimpleMessageBus implements MessageBus {
 				
 				taskQueue.addAsync(TaskOptions.Builder.withPayload((DeferredTask) constructor.newInstance(event)));
 				
-			} catch (InstantiationException | IllegalAccessException
-					| IllegalArgumentException | InvocationTargetException e) {
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				MessageLog.log(e);
 			}
 		}
@@ -120,12 +150,8 @@ public class SimpleMessageBus implements MessageBus {
 		if(!commandHandlers.containsKey(key))
 			return;
 		
-		CommandHandler<?> handlerForType = commandHandlers.get(key);
+		CommandHandler<? extends Command> handlerForType = commandHandlers.get(key);
 		
-		/**
-		 * Execute the first handler. Commands *should* normally
-		 * have a single handler.
-		 */
 		@SuppressWarnings("unchecked")
 		CommandHandler<T> handler = (CommandHandler<T>) handlerForType;
 		handler.handle(command);
