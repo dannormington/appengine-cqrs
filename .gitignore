@@ -15,4 +15,3 @@ endpoint-libs
 *.war
 *.ear
 !gson-2.2.4.jar
-!guava-15.0.jar

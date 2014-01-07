@@ -1,63 +1,50 @@
 package com.simplecqrs.appengine.messaging;
 
-import com.google.common.eventbus.AsyncEventBus;
+import com.simplecqrs.appengine.persistence.AggregateHydrationException;
+import com.simplecqrs.appengine.persistence.EventCollisionException;
 
 /**
- * Simple wrapper around guava eventbus for handling commands and event publishing
+ * Interface for a simple message bus
  */
-public class MessageBus{
-	
-	private AsyncEventBus eventBus;
-	
-	private MessageBus(AsyncEventBus eventBus){
-		this.eventBus = eventBus;
-	}
-	
+public interface MessageBus{
+
 	/**
-	 * Get an instance of the message bus
-	 * @return
-	 */
-	public static MessageBus getInstance(){
-		return InstanceHolder.INSTANCE;
-	}
-	
-	/**
-	 * Register events/commands
+	 * Register a command handler
 	 * 
-	 * @param object
+	 * @param aClass
+	 * @param handler
 	 */
-	public void register(Object object){
-		eventBus.register(object);
-	}
+	<T extends Command> void registerCommandHandler(Class<T> aClass, CommandHandler<T> handler);
 	
 	/**
-	 * Publish events asynchronously
+	 * Register an event handler
+	 * 
+	 * @param aClass
+	 * @param handler
+	 */
+	<T extends Event, H extends EventHandler<T>> void registerEventHandler(Class<T> aClass, Class<H> handler);
+	
+	/**
+	 * Publish an event to the default queue
 	 * 
 	 * @param event
 	 */
-	public void publish(Event event){
-		eventBus.post(event);
-	}
+	<T extends Event> void publish(T event);
 	
 	/**
-	 * Process the command asynchronously
+	 * Publish an event to the specified queue
+	 * 
+	 * @param event
+	 * @param queue
+	 */
+	<T extends Event> void publish(T event, String queue);
+	
+	/**
+	 * Execute a command
 	 * 
 	 * @param command
+	 * @throws AggregateHydrationException 
+	 * @throws EventCollisionException 
 	 */
-	public void send(Command command){
-		eventBus.post(command);
-	}
-	
-	/**
-	 * Create the message bus
-	 * 
-	 * @return
-	 */
-	private static MessageBus create(){
-		return new MessageBus(new AsyncEventBus(new ThreadExecutor()));
-	}
-	
-	private static class InstanceHolder{
-		public static final MessageBus INSTANCE = MessageBus.create();
-	}
+	<T extends Command> void send(T command) throws EventCollisionException, AggregateHydrationException;
 }

@@ -1,4 +1,4 @@
-package com.simplecqrs.appengine.example.handlers;
+package com.simplecqrs.appengine.example.handlers.events;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -7,21 +7,19 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.api.taskqueue.DeferredTask;
 import com.simplecqrs.appengine.example.domain.AttendeeNameChanged;
+import com.simplecqrs.appengine.messaging.EventHandler;
 import com.simplecqrs.appengine.messaging.MessageLog;
 
 /**
  * Deferred task for handling an attendee name change
  */
-public class HandleAttendeeNameChangedTask implements DeferredTask{
+public class AttendeeNameChangedEventHandler extends EventHandler<AttendeeNameChanged>{
 
 	private static final long serialVersionUID = 1L;
 
-	private AttendeeNameChanged event = null;
-	
-	public HandleAttendeeNameChangedTask(AttendeeNameChanged event){
-		this.event = event;
+	public AttendeeNameChangedEventHandler(AttendeeNameChanged event){
+		super(event);
 	}
 	
 	@Override

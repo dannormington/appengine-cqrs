@@ -1,4 +1,4 @@
-package com.simplecqrs.appengine.example.handlers;
+package com.simplecqrs.appengine.example.handlers.events;
 
 import java.util.List;
 
@@ -15,22 +15,23 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.appengine.api.taskqueue.DeferredTask;
 import com.simplecqrs.appengine.example.commands.ResolveDuplicateEmail;
 import com.simplecqrs.appengine.example.domain.AttendeeRegistered;
-import com.simplecqrs.appengine.messaging.MessageBus;
+import com.simplecqrs.appengine.messaging.EventHandler;
+import com.simplecqrs.appengine.messaging.MessageLog;
+import com.simplecqrs.appengine.messaging.SimpleMessageBus;
+import com.simplecqrs.appengine.persistence.AggregateHydrationException;
+import com.simplecqrs.appengine.persistence.EventCollisionException;
 
 /**
  * Deferred task to handle an attendee registering
  */
-public class HandleAttendeeRegisteredTask implements DeferredTask{
+public class AttendeeRegisteredEventHandler extends EventHandler<AttendeeRegistered>{
 
 	private static final long serialVersionUID = 1L;
 
-	private AttendeeRegistered event = null;
-	
-	public HandleAttendeeRegisteredTask(AttendeeRegistered event){
-		this.event = event;
+	public AttendeeRegisteredEventHandler(AttendeeRegistered event){
+		super(event);
 	}
 	
 	@Override
@@ -78,7 +79,12 @@ public class HandleAttendeeRegisteredTask implements DeferredTask{
              * be populated
              */
     		if(duplicateExists){
-    			MessageBus.getInstance().send(new ResolveDuplicateEmail(event.getAttendeeId()));
+    			try {
+					SimpleMessageBus.getInstance().send(new ResolveDuplicateEmail(event.getAttendeeId()));
+				} catch (EventCollisionException | AggregateHydrationException commandException) {
+					MessageLog.log(commandException);
+					//may want to publish message to administrator
+				}
     		}
             
         } finally {

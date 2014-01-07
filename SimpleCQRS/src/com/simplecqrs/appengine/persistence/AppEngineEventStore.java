@@ -14,8 +14,8 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.simplecqrs.appengine.messaging.Event;
-import com.simplecqrs.appengine.messaging.MessageBus;
 import com.simplecqrs.appengine.messaging.MessageLog;
+import com.simplecqrs.appengine.messaging.SimpleMessageBus;
 
 /**
  * Basic implementation of an event store that persists
@@ -32,6 +32,27 @@ public class AppEngineEventStore implements EventStore {
 	 * Property name for the list of events in storage
 	 */
 	private static final String EVENTS_PROPERTY = "Events";
+	
+	/**
+	 * Name of the task queue to publish events to
+	 */
+	private String queue = null;
+	
+	/**
+	 * Constructor to specify the name of the task queue for
+	 * publishing event handlers to
+	 * 
+	 * @param queue
+	 */
+	public AppEngineEventStore(String queue){
+		this.queue = queue;
+	}
+	
+	/**
+	 * Default constructor
+	 */
+	public AppEngineEventStore(){
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -101,7 +122,7 @@ public class AppEngineEventStore implements EventStore {
 				
 				for(Event event : events){
 					//Publish the event for listeners
-					MessageBus.getInstance().publish(event);
+					SimpleMessageBus.getInstance().publish(event, queue);
 				}
 
 			} catch (Exception e){
@@ -157,3 +178,4 @@ public class AppEngineEventStore implements EventStore {
 		return hydrateEvents(entity);
 	}
 }
+

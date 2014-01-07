@@ -26,13 +26,24 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 	private Class<T> aClass;
 	
 	/**
-	 * Default constructor
+	 * Default Constructor
 	 * 
 	 * @param aClass
 	 */
 	public EventRepository(Class<T> aClass){
 		this.aClass = aClass;
 		eventStore = new AppEngineEventStore();
+	}
+	
+	/**
+	 * Constructor to be used when specifying a specific
+	 * queue for event to be published to
+	 * 
+	 * @param aClass
+	 */
+	public EventRepository(Class<T> aClass, String queue){
+		this.aClass = aClass;
+		eventStore = new AppEngineEventStore(queue);
 	}
 	
 	@Override

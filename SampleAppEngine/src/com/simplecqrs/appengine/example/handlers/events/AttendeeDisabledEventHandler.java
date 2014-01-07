@@ -1,19 +1,17 @@
-package com.simplecqrs.appengine.example.handlers;
+package com.simplecqrs.appengine.example.handlers.events;
 
-import com.google.appengine.api.taskqueue.DeferredTask;
 import com.simplecqrs.appengine.example.domain.AttendeeDisabled;
+import com.simplecqrs.appengine.messaging.EventHandler;
 import com.simplecqrs.appengine.messaging.MessageLog;
 
-public class HandleAttendeeDisabledTask implements DeferredTask {
+public class AttendeeDisabledEventHandler extends EventHandler<AttendeeDisabled> {
 	
 	private static final long serialVersionUID = 1L;
-
-	private AttendeeDisabled event = null;
 	
-	public HandleAttendeeDisabledTask(AttendeeDisabled event){
-		this.event = event;
+	public AttendeeDisabledEventHandler(AttendeeDisabled event) {
+		super(event);
 	}
-	
+
 	@Override
 	public void run() {
 		
