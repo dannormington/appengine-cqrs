@@ -39,8 +39,6 @@ located at https://github.com/gregoryyoung/m-r
 	* http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - google-gson
 	* https://code.google.com/p/google-gson/
-- guava-libraries
-	* https://code.google.com/p/guava-libraries/
 
 ##Import Instructions for Eclipse
 - Right click in package explorer and select Import
@@ -53,7 +51,3 @@ located at https://github.com/gregoryyoung/m-r
 	* Check "Enable local HRD support"
 	* Uncheck "Use Datanucleus JDO/JPA to access the datastore"
 	* Click OK
-
-##Notes
-This implemenation is still missing the message bus portion that will
-publish domain events using GAE task or deferred queues.
