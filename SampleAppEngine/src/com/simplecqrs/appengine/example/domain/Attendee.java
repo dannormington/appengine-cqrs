@@ -20,7 +20,7 @@ public class Attendee extends AggregateRootBase {
 	 * 
 	 * @param attendeeId
 	 */
-	public Attendee(UUID attendeeId){
+	private Attendee(UUID attendeeId){
 		super(attendeeId);
 	}
 
