@@ -93,11 +93,14 @@ public class SimpleMessageBus implements MessageBus {
 	}
 	
 	/**
-	 * Publish an event. Although the publish method is synchronous, the actual processing
-	 * of each event that is published to the queue is asynchronous.
+	 * Publish an event asynchronously. Although this methods execution is synchronous
+	 * each handler is executed using a deferred task which is run asynchronously
+	 * 
+	 * @throws PublishEventException 
 	 */
 	@Override
 	public <T extends Event> void publish(T event, String queue) {
+		
 		if(event == null || eventHandlers.isEmpty())
 			return;
 		
@@ -108,33 +111,52 @@ public class SimpleMessageBus implements MessageBus {
 		
 		List<Class<? extends EventHandler<? extends Event>>> handlersForType = eventHandlers.get(key);
 		
+		List<DeferredTask> taskList = new ArrayList<DeferredTask>();
+		
+		/*
+		 * Loop through all of the event handlers for the event that needs to be published and attempt
+		 * to instantiate the handlers through reflection. If any exceptions occur we will not
+		 * publish to the task queue.
+		 */
+		
 		for(Class<? extends EventHandler<? extends Event>> handler : handlersForType){
-			
-			Constructor<? extends EventHandler<? extends Event>> constructor = null;
-			try {
+	
+			try{
+				/*
+				 * get a constructor that expects a single parameter value that matches the event's type
+				 */
+				Constructor<? extends EventHandler<? extends Event>> constructor = handler.getDeclaredConstructor(event.getClass());
+				constructor.setAccessible(true);
+				taskList.add((DeferredTask) constructor.newInstance(event));
 				
-				constructor = handler.getDeclaredConstructor(event.getClass());
-				
-			} catch (NoSuchMethodException | SecurityException e) {
-				return;
+			} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				/*
+				 * unable to create an instance of the handler.
+				 * more than likely this is caused by the handler
+				 * not implementing a constructor that takes a single
+				 * parameter instance of the event.
+				 * 
+				 *  There are several possibilities for this situation
+				 *  - Publish a new event
+				 *  - Log the exception
+				 *  - Send an email to an administrator
+				 *  - etc..
+				 */
 			}
+		}
 		
-			constructor.setAccessible(true);
+		if(taskList.isEmpty())
+			return;
 		
-			try {
-				
-				Queue taskQueue = null;
-				
-				if(queue != null)
-					taskQueue = QueueFactory.getQueue(queue);
-				else
-					taskQueue = QueueFactory.getDefaultQueue();
-				
-				taskQueue.addAsync(TaskOptions.Builder.withPayload((DeferredTask) constructor.newInstance(event)));
-				
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				return;
-			}
+		Queue taskQueue = null;
+		
+		if(queue != null)
+			taskQueue = QueueFactory.getQueue(queue);
+		else
+			taskQueue = QueueFactory.getDefaultQueue();
+		
+		for(DeferredTask task : taskList){
+			taskQueue.addAsync(TaskOptions.Builder.withPayload(task));
 		}
 	}
 

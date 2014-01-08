@@ -121,15 +121,29 @@ public class AppEngineEventStore implements EventStore {
 				dataStore.put(entity);
 				transaction.commit();
 				
-				for(Event event : events){
-					//Publish the event for listeners
-					SimpleMessageBus.getInstance().publish(event, queue);
-				}
-
-			} catch (Exception e){
+				/*
+				 * Publish the events using the message bus
+				 */
+				publishEvents(events);
+				
+			} finally{
 				if(transaction != null &&  transaction.isActive())
-					transaction.rollback();
+					transaction.commit();
 			}
+		}
+	}
+	
+	/**
+	 * Publish all of the events in a single transaction.
+	 * 
+	 * @param events
+	 * @param dataStore
+	 */
+	private void publishEvents(Iterable<Event> events){
+			
+		//Publish the event for listeners
+		for(Event event : events){
+			SimpleMessageBus.getInstance().publish(event, queue);
 		}
 	}
 	

@@ -3,9 +3,23 @@ package com.simplecqrs.appengine.messaging;
 import com.google.appengine.api.taskqueue.DeferredTask;
 
 /**
- * Class for handling a specific event that will be published to a queue
+ * Class for handling a specific event that will be published to a queue.
+ * Ensure that all classes that extend this class must implement a constructor
+ * that receives a single parameter of the event's type
+ * 
+ * Code Example of required constructor:
+ * <pre>
+ * public class EmployeeDeactivatedEventHandler extends EventHandler{@code<EmployeeDeactivated>} {
+ * 
+ *   public EmployeeDeactivatedEventHandler(EmployeeDeactivated event) {
+ *     super(event);
+ *   }
+ *   
+ * }
+ * </pre>
  * 
  * @param <T>
+ * 
  */
 @SuppressWarnings("serial")
 public abstract class EventHandler<T extends Event> implements DeferredTask {
