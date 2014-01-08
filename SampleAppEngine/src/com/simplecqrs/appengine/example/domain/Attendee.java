@@ -3,6 +3,7 @@ package com.simplecqrs.appengine.example.domain;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.domain.AggregateRootBase;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 
 /**
  * Class that represents an attendee at a conference
@@ -22,7 +23,7 @@ public class Attendee extends AggregateRootBase {
 	public Attendee(UUID attendeeId){
 		super(attendeeId);
 	}
-	
+
 	/**
 	 * Constructor used when creating a new attendee
 	 * 
@@ -30,9 +31,9 @@ public class Attendee extends AggregateRootBase {
 	 * @param email
 	 * @param firstName
 	 * @param lastName
-	 * @throws IllegalArgumentException
+	 * @throws HydrationException 
 	 */
-	private Attendee(UUID attendeeId, String email, String firstName, String lastName)  throws IllegalArgumentException {
+	private Attendee(UUID attendeeId, String email, String firstName, String lastName) throws HydrationException {
 		this(attendeeId);
 
 		applyChange(new AttendeeRegistered(attendeeId, email, firstName, lastName));
@@ -44,8 +45,9 @@ public class Attendee extends AggregateRootBase {
 	 * @param firstName
 	 * @param lastName
 	 * @throws IllegalArgumentException
+	 * @throws HydrationException 
 	 */
-	public void changeName(String firstName, String lastName) throws IllegalArgumentException {
+	public void changeName(String firstName, String lastName) throws IllegalArgumentException, HydrationException {
 		
 		/*
 		 * Don't bother checking for parameter validity if the attendee isn't enabled
@@ -65,8 +67,9 @@ public class Attendee extends AggregateRootBase {
 	 * Disable the attendee
 	 * 
 	 * @param reason
+	 * @throws HydrationException 
 	 */
-	public void disable(DisableReason reason){
+	public void disable(DisableReason reason) throws HydrationException{
 
 		/*
 		 * Only change if the attendee is enabled
@@ -83,8 +86,9 @@ public class Attendee extends AggregateRootBase {
 	 * @param firstName
 	 * @param lastName
 	 * @return
+	 * @throws HydrationException 
 	 */
-	public static Attendee create(UUID attendeeId, String email, String firstName, String lastName){
+	public static Attendee create(UUID attendeeId, String email, String firstName, String lastName) throws HydrationException{
 
 		/*
 		 * Only create an instance if all of the data is valid

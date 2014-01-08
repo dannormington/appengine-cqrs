@@ -1,4 +1,4 @@
-package com.simplecqrs.appengine.messaging;
+package com.simplecqrs.appengine.example;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

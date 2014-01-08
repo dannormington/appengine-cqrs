@@ -6,11 +6,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.domain.AggregateRoot;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 import com.simplecqrs.appengine.messaging.Event;
-import com.simplecqrs.appengine.messaging.MessageLog;
 
 /**
  * Implementation of a simple event repository
+ * 
  * @param <T>
  */
 public class EventRepository<T extends AggregateRoot> implements Repository<T> {
@@ -37,7 +39,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 	
 	/**
 	 * Constructor to be used when specifying a specific
-	 * queue for event to be published to
+	 * queue for events to be published to
 	 * 
 	 * @param aClass
 	 */
@@ -79,12 +81,13 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 			constructor.setAccessible(true);
 			aggregate = constructor.newInstance(id);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			MessageLog.log(e);
+			/*
+			 * throw a hydration exception along with the aggregate id and the message
+			 */
+			throw new HydrationException(id, e.getMessage());
 		}
 		
-		if(aggregate != null){
-			aggregate.loadFromHistory(history);
-		}
+		aggregate.loadFromHistory(history);
 		
 		return aggregate;
 	}

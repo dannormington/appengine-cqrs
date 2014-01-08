@@ -1,7 +1,7 @@
 package com.simplecqrs.appengine.messaging;
 
-import com.simplecqrs.appengine.persistence.EventCollisionException;
-import com.simplecqrs.appengine.persistence.HydrationException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 
 /**
  * Interface for a simple message bus

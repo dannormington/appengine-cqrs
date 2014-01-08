@@ -3,6 +3,7 @@ package com.simplecqrs.appengine.domain;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.messaging.Event;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 
 /**
  * Simple interface to an aggregate root
@@ -34,8 +35,9 @@ public interface AggregateRoot {
 	 * load the aggregate root
 	 * 
 	 * @param history
+	 * @throws HydrationException 
 	 */
-	void loadFromHistory(Iterable<Event> history);
+	void loadFromHistory(Iterable<Event> history) throws HydrationException;
 	
 	/**
 	 * Returns the version of the aggregate when it was hydrated

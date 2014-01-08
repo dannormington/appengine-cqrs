@@ -2,6 +2,8 @@ package com.simplecqrs.appengine.persistence;
 
 import java.util.UUID;
 
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 import com.simplecqrs.appengine.messaging.Event;
 
 /**

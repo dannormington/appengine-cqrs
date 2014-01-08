@@ -13,8 +13,9 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 import com.simplecqrs.appengine.messaging.Event;
-import com.simplecqrs.appengine.messaging.MessageLog;
 import com.simplecqrs.appengine.messaging.SimpleMessageBus;
 
 /**
@@ -150,8 +151,10 @@ public class AppEngineEventStore implements EventStore {
 				history.add(event);
 				
 			} catch (JsonSyntaxException | ClassNotFoundException e) {
-				MessageLog.log(e);
-				throw new HydrationException(UUID.fromString(entity.getKey().toString()));
+				/*
+				 * Throw a hydration exception along with the aggregate Id and the message
+				 */
+				throw new HydrationException(UUID.fromString(entity.getKey().toString()),e.getMessage());
 			}
 		}
 		

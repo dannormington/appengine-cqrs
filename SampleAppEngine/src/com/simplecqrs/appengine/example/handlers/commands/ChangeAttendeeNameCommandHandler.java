@@ -4,9 +4,9 @@ import com.simplecqrs.appengine.example.commands.ChangeAttendeeName;
 import com.simplecqrs.appengine.example.domain.Attendee;
 import com.simplecqrs.appengine.example.handlers.Constants;
 import com.simplecqrs.appengine.messaging.CommandHandler;
-import com.simplecqrs.appengine.messaging.MessageLog;
-import com.simplecqrs.appengine.persistence.HydrationException;
-import com.simplecqrs.appengine.persistence.EventCollisionException;
+import com.simplecqrs.appengine.example.MessageLog;
+import com.simplecqrs.appengine.exceptions.HydrationException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
 import com.simplecqrs.appengine.persistence.EventRepository;
 import com.simplecqrs.appengine.persistence.Repository;
 

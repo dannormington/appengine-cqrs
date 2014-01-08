@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.simplecqrs.appengine.messaging.Event;
-import com.simplecqrs.appengine.messaging.MessageLog;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 
 /**
  * Base class for aggregate root implementations
@@ -65,7 +65,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	}
 	
 	@Override
-	public void loadFromHistory(Iterable<Event> history) {
+	public void loadFromHistory(Iterable<Event> history) throws HydrationException {
 		
 		if(history != null){
 			for(Event event : history){
@@ -79,11 +79,9 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * Apply the event assuming it is new
 	 * 
 	 * @param event
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws HydrationException 
 	 */
-	protected void applyChange(Event event) {
+	protected void applyChange(Event event) throws HydrationException {
 		applyChange(event,true);
 	}
 	
@@ -92,11 +90,9 @@ public abstract class AggregateRootBase implements AggregateRoot {
 	 * 
 	 * @param event
 	 * @param isNew
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws HydrationException 
 	 */
-	private void applyChange(Event event, boolean isNew) {
+	private void applyChange(Event event, boolean isNew) throws HydrationException {
 		
 		Method method = null;
 		
@@ -106,10 +102,6 @@ public abstract class AggregateRootBase implements AggregateRoot {
 			//do nothing. This just means that the method signature wasn't found and
 			//the aggregate doesn't need to apply any state changes since it wasn't
 			//implemented.
-			MessageLog.log(String.format("apply method not found in %s for %s", this.getClass(), event.getClass()));
-		} catch (SecurityException e) {
-			MessageLog.log(e);
-			return;
 		}
 		
 		if(method != null){
@@ -117,9 +109,8 @@ public abstract class AggregateRootBase implements AggregateRoot {
 			try {
 				method.invoke(this,event);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				MessageLog.log(e);
-				return;
-			}	
+				throw new HydrationException(this.getId(), e.getMessage());
+			}		
 		}
 		
 		if(isNew){

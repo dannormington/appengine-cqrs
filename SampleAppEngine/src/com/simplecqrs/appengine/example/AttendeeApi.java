@@ -4,10 +4,9 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.simplecqrs.appengine.example.commands.ChangeAttendeeName;
 import com.simplecqrs.appengine.example.commands.RegisterAttendee;
-import com.simplecqrs.appengine.messaging.MessageLog;
 import com.simplecqrs.appengine.messaging.SimpleMessageBus;
-import com.simplecqrs.appengine.persistence.EventCollisionException;
-import com.simplecqrs.appengine.persistence.HydrationException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
 
 @Api(
 		name="thatconference",

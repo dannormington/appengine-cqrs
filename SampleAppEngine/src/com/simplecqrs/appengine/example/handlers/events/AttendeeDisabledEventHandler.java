@@ -2,7 +2,7 @@ package com.simplecqrs.appengine.example.handlers.events;
 
 import com.simplecqrs.appengine.example.domain.AttendeeDisabled;
 import com.simplecqrs.appengine.messaging.EventHandler;
-import com.simplecqrs.appengine.messaging.MessageLog;
+import com.simplecqrs.appengine.example.MessageLog;
 
 public class AttendeeDisabledEventHandler extends EventHandler<AttendeeDisabled> {
 	

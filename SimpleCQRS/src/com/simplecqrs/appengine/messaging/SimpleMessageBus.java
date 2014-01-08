@@ -11,8 +11,8 @@ import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.simplecqrs.appengine.persistence.HydrationException;
-import com.simplecqrs.appengine.persistence.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
 
 /**
  * Implementation of a simple message bus for publishing
@@ -116,7 +116,6 @@ public class SimpleMessageBus implements MessageBus {
 				constructor = handler.getDeclaredConstructor(event.getClass());
 				
 			} catch (NoSuchMethodException | SecurityException e) {
-				MessageLog.log(e);
 				return;
 			}
 		
@@ -134,7 +133,7 @@ public class SimpleMessageBus implements MessageBus {
 				taskQueue.addAsync(TaskOptions.Builder.withPayload((DeferredTask) constructor.newInstance(event)));
 				
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				MessageLog.log(e);
+				return;
 			}
 		}
 	}

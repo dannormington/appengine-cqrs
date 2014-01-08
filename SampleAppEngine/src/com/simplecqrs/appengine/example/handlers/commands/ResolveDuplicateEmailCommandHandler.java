@@ -5,8 +5,8 @@ import com.simplecqrs.appengine.example.domain.Attendee;
 import com.simplecqrs.appengine.example.domain.DisableReason;
 import com.simplecqrs.appengine.example.handlers.Constants;
 import com.simplecqrs.appengine.messaging.CommandHandler;
-import com.simplecqrs.appengine.persistence.HydrationException;
-import com.simplecqrs.appengine.persistence.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
 import com.simplecqrs.appengine.persistence.EventRepository;
 import com.simplecqrs.appengine.persistence.Repository;
 

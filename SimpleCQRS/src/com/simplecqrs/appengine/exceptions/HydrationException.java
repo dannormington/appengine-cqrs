@@ -1,9 +1,11 @@
-package com.simplecqrs.appengine.persistence;
+package com.simplecqrs.appengine.exceptions;
 
 import java.util.UUID;
 
 /**
  * Exception that is thrown when the hydration of an aggregate fails.
+ * This can occur during the loading from a repository as well as
+ * during the "apply" methods when there is a reflection based exception.
  */
 public class HydrationException extends Exception {
 	
@@ -20,6 +22,17 @@ public class HydrationException extends Exception {
 	 */
 	public HydrationException(UUID aggregateId){
 		super(ERROR_TEXT);
+		this.aggregateId = aggregateId;
+	}
+	
+	/**
+	 * Constructor to provide specific error reason for the hydration exception
+	 * 
+	 * @param aggregateId
+	 * @param error
+	 */
+	public HydrationException(UUID aggregateId, String error){
+		super(error);
 		this.aggregateId = aggregateId;
 	}
 	

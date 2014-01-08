@@ -18,10 +18,10 @@ import com.google.appengine.api.datastore.Transaction;
 import com.simplecqrs.appengine.example.commands.ResolveDuplicateEmail;
 import com.simplecqrs.appengine.example.domain.AttendeeRegistered;
 import com.simplecqrs.appengine.messaging.EventHandler;
-import com.simplecqrs.appengine.messaging.MessageLog;
+import com.simplecqrs.appengine.example.MessageLog;
 import com.simplecqrs.appengine.messaging.SimpleMessageBus;
-import com.simplecqrs.appengine.persistence.HydrationException;
-import com.simplecqrs.appengine.persistence.EventCollisionException;
+import com.simplecqrs.appengine.exceptions.HydrationException;
+import com.simplecqrs.appengine.exceptions.EventCollisionException;
 
 /**
  * Deferred task to handle an attendee registering

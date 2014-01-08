@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
 import com.simplecqrs.appengine.example.domain.AttendeeNameChanged;
 import com.simplecqrs.appengine.messaging.EventHandler;
-import com.simplecqrs.appengine.messaging.MessageLog;
+import com.simplecqrs.appengine.example.MessageLog;
 
 /**
  * Deferred task for handling an attendee name change

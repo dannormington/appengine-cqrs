@@ -1,4 +1,4 @@
-package com.simplecqrs.appengine.persistence;
+package com.simplecqrs.appengine.exceptions;
 
 import java.util.Date;
 import java.util.UUID;
