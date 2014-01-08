@@ -93,7 +93,7 @@ public class SimpleMessageBus implements MessageBus {
 	}
 	
 	/**
-	 * Although the publish method is synchronous, the actual processing
+	 * Publish an event. Although the publish method is synchronous, the actual processing
 	 * of each event that is published to the queue is asynchronous.
 	 */
 	@Override
@@ -138,6 +138,9 @@ public class SimpleMessageBus implements MessageBus {
 		}
 	}
 
+	/**
+	 * Execute a command synchronously
+	 */
 	@Override
 	public <T extends Command> void send(T command) throws EventCollisionException, HydrationException {
 		
