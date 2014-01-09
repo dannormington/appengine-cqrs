@@ -114,11 +114,9 @@ public class SimpleMessageBus implements MessageBus {
 		List<DeferredTask> taskList = new ArrayList<DeferredTask>();
 		
 		/*
-		 * Loop through all of the event handlers for the event that needs to be published and attempt
-		 * to instantiate the handlers through reflection. If any exceptions occur we will not
-		 * publish to the task queue.
+		 * Loop through all of the event handlers for the event being published 
+		 * and attempt to instantiate the handlers through reflection.
 		 */
-		
 		for(Class<? extends EventHandler<? extends Event>> handler : handlersForType){
 	
 			try{

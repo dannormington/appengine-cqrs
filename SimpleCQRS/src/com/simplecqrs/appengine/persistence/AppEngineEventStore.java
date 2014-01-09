@@ -59,77 +59,76 @@ public class AppEngineEventStore implements EventStore {
 	@Override
 	public void saveEvents(UUID aggregateId, int expectedVersion, Iterable<Event> events) throws EventCollisionException {
 		
-		if(events != null){
-			Transaction transaction = null;
+		if(events == null)
+			return;
+		
+		Transaction transaction = null;
+		
+		try{
+		
+			DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
+			transaction = dataStore.beginTransaction();
 			
-			try{
+			Key key = KeyFactory.createKey(KIND, aggregateId.toString());		
+			Entity entity = null;
+			long currentVersion = 0;
 			
-				DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
-				transaction = dataStore.beginTransaction();
-				
-				Key key = KeyFactory.createKey(KIND, aggregateId.toString());		
-				Entity entity = null;
-				long currentVersion = 0;
-				
-				try {
-					entity = dataStore.get(transaction,key);
-				} catch (EntityNotFoundException e) {
-					// Not a problem, just continue on. It is a new aggregate
-				}
-
-				List<String> entityEvents = null;
-				
-				if(entity == null){
-					entity = new Entity(KIND, aggregateId.toString());
-					entityEvents = new ArrayList<String>();
-				}
-				else{
-					entityEvents = (List<String>)entity.getProperty(EVENTS_PROPERTY);
-					currentVersion = entityEvents.size();
-					
-					//if the current version is different than what
-					//was hydrated during the state change then we
-					//know we have an event collision. This is a very simple approach
-					//and more "business knowledge" can be added here to handle scenarios
-					//where the versions may be different but the state change can still occur.
-					if(currentVersion != expectedVersion)
-					{
-						transaction.rollback();
-						
-						throw new EventCollisionException(aggregateId, expectedVersion);
-					}
-				}
-				
-				Gson gson = new Gson();
-				
-				//convert all of the new events to json for storage
-				for(Event event : events){
-					
-					//increment the current version
-					currentVersion++;
-					
-					String eventJson = gson.toJson(event);
-					String kind = event.getClass().getName();
-					
-					EventModel newEvent = new EventModel(kind, eventJson, new Long(currentVersion));
-					
-					String json = gson.toJson(newEvent);
-					entityEvents.add(json);
-				}
-				
-				entity.setUnindexedProperty(EVENTS_PROPERTY, entityEvents);
-				dataStore.put(entity);
-				transaction.commit();
-				
-				/*
-				 * Publish the events using the message bus
-				 */
-				publishEvents(events);
-				
-			} finally{
-				if(transaction != null &&  transaction.isActive())
-					transaction.commit();
+			try {
+				entity = dataStore.get(transaction,key);
+			} catch (EntityNotFoundException e) {
+				// Not a problem, just continue on. It is a new aggregate
 			}
+
+			List<String> entityEvents = null;
+			
+			if(entity == null){
+				entity = new Entity(KIND, aggregateId.toString());
+				entityEvents = new ArrayList<String>();
+			}
+			else{
+				entityEvents = (List<String>)entity.getProperty(EVENTS_PROPERTY);
+				currentVersion = entityEvents.size();
+				
+				//if the current version is different than what
+				//was hydrated during the state change then we
+				//know we have an event collision. This is a very simple approach
+				//and more "business knowledge" can be added here to handle scenarios
+				//where the versions may be different but the state change can still occur.
+				if(currentVersion != expectedVersion)
+				{
+					throw new EventCollisionException(aggregateId, expectedVersion);
+				}
+			}
+			
+			Gson gson = new Gson();
+			
+			//convert all of the new events to json for storage
+			for(Event event : events){
+				
+				//increment the current version
+				currentVersion++;
+				
+				String eventJson = gson.toJson(event);
+				String kind = event.getClass().getName();
+				
+				EventModel newEvent = new EventModel(kind, eventJson, new Long(currentVersion));
+				
+				String json = gson.toJson(newEvent);
+				entityEvents.add(json);
+			}
+			
+			entity.setUnindexedProperty(EVENTS_PROPERTY, entityEvents);
+			dataStore.put(entity);
+			transaction.commit();
+			
+			/*
+			 * Publish the events using the message bus
+			 */
+			publishEvents(events);
+			
+		} finally{
+			if(transaction != null &&  transaction.isActive())
+				transaction.rollback();
 		}
 	}
 	
