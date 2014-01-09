@@ -93,7 +93,14 @@ public class SimpleMessageBus implements MessageBus {
     }
 
     /**
-     * Publish an event asynchronously
+     * Publish an event asynchronously. Although the publish is
+     * asynchronous it is still subject to the 60 second request time
+     * limit. This is why the event handlers themselves are using
+     * deferred tasks because they are not subject to the request time limit.
+     * 
+     * By executing this method asynchronously it allows the caller to continue 
+     * without waiting for the individual event handlers to be added
+     * to the queue for processing.
      * 
      * @throws PublishEventException 
      */
