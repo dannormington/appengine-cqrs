@@ -93,71 +93,17 @@ public class SimpleMessageBus implements MessageBus {
     }
 
     /**
-     * Publish an event asynchronously. Although this methods execution is synchronous
-     * each handler is executed using a deferred task which is run asynchronously
+     * Publish an event asynchronously
      * 
      * @throws PublishEventException 
      */
     @Override
     public <T extends Event> void publish(T event, String queue) {
 
-        if(event == null || eventHandlers.isEmpty())
-            return;
-
-        String key = event.getClass().getName();
-
-        if(!eventHandlers.containsKey(key))
-            return;
-
-        List<Class<? extends EventHandler<? extends Event>>> handlersForType = eventHandlers.get(key);
-
-        List<DeferredTask> taskList = new ArrayList<DeferredTask>();
-
-        /*
-         * Loop through all of the event handlers for the event being published 
-         * and attempt to instantiate the handlers through reflection.
-         */
-        for(Class<? extends EventHandler<? extends Event>> handler : handlersForType){
-
-            try{
-                /*
-                 * get a constructor that expects a single parameter value that matches the event's type
-                 */
-                Constructor<? extends EventHandler<? extends Event>> constructor = handler.getDeclaredConstructor(event.getClass());
-                constructor.setAccessible(true);
-                taskList.add(constructor.newInstance(event));
-
-            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                /*
-                 * unable to create an instance of the handler.
-                 * more than likely this is caused by the handler
-                 * not implementing a constructor that takes a single
-                 * parameter instance of the event.
-                 * 
-                 *  There are several possibilities for this situation
-                 *  - Publish a new event
-                 *  - Log the exception
-                 *  - Send an email to an administrator
-                 *  - etc..
-                 */
-            }
-        }
-
-        if(taskList.isEmpty())
-            return;
-
-        Queue taskQueue = null;
-
-        if(queue != null)
-            taskQueue = QueueFactory.getQueue(queue);
-        else
-            taskQueue = QueueFactory.getDefaultQueue();
-
-        for(DeferredTask task : taskList){
-            taskQueue.addAsync(TaskOptions.Builder.withPayload(task));
-        }
+        ThreadExecutor executor = new ThreadExecutor();        
+        executor.execute(new PublishTask(event,queue));
     }
-
+    
     /**
      * Execute a command synchronously
      */
@@ -177,5 +123,78 @@ public class SimpleMessageBus implements MessageBus {
         @SuppressWarnings("unchecked")
         CommandHandler<T> handler = (CommandHandler<T>) handlerForType;
         handler.handle(command);
+    }
+    
+    /**
+     * Runnable task used to publish an event asynchronously.
+     */
+    private class PublishTask implements Runnable{
+
+        private String queue;
+        private Event event;
+        
+        public PublishTask(Event event, String queue){
+            this.queue = queue;
+            this.event = event;
+        }
+        
+        @Override
+        public void run() {
+            if(event == null || eventHandlers.isEmpty())
+                return;
+
+            String key = event.getClass().getName();
+
+            if(!eventHandlers.containsKey(key))
+                return;
+
+            List<Class<? extends EventHandler<? extends Event>>> handlersForType = eventHandlers.get(key);
+
+            List<DeferredTask> taskList = new ArrayList<DeferredTask>();
+
+            /*
+             * Loop through all of the event handlers for the event being published 
+             * and attempt to instantiate the handlers through reflection.
+             */
+            for(Class<? extends EventHandler<? extends Event>> handler : handlersForType){
+
+                try{
+                    /*
+                     * get a constructor that expects a single parameter value that matches the event's type
+                     */
+                    Constructor<? extends EventHandler<? extends Event>> constructor = handler.getDeclaredConstructor(event.getClass());
+                    constructor.setAccessible(true);
+                    taskList.add(constructor.newInstance(event));
+
+                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    /*
+                     * unable to create an instance of the handler.
+                     * more than likely this is caused by the handler
+                     * not implementing a constructor that takes a single
+                     * parameter instance of the event.
+                     * 
+                     *  There are several possibilities for this situation
+                     *  - Publish a new event
+                     *  - Log the exception
+                     *  - Send an email to an administrator
+                     *  - etc..
+                     */
+                }
+            }
+
+            if(taskList.isEmpty())
+                return;
+
+            Queue taskQueue = null;
+
+            if(queue != null)
+                taskQueue = QueueFactory.getQueue(queue);
+            else
+                taskQueue = QueueFactory.getDefaultQueue();
+
+            for(DeferredTask task : taskList){
+                taskQueue.addAsync(TaskOptions.Builder.withPayload(task));
+            }
+        }
     }
 }

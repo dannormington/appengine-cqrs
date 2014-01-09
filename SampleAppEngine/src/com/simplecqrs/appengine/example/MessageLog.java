@@ -16,10 +16,20 @@ public class MessageLog {
         log.setLevel(java.util.logging.Level.FINEST);
     }
 
+    /**
+     * Log an informational message
+     * 
+     * @param message
+     */
     public static void log(String message){
         log.log(Level.INFO, message);
     }
 
+    /**
+     * Log an exception
+     * 
+     * @param e
+     */
     public static void log(Exception e){
 
         if(e == null)
