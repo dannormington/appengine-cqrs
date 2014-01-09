@@ -11,16 +11,16 @@ import com.simplecqrs.appengine.persistence.Repository;
 
 public class ChangeAttendeeNameCommandHandler implements CommandHandler<ChangeAttendeeName> {
 
-	@Override
-	public void handle(ChangeAttendeeName command) throws EventCollisionException, HydrationException {
-		
-		Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
-		
-		Attendee attendee = repository.getById(command.getAttendeeId());
-		
-		if(attendee != null){
-			attendee.changeName(command.getFirstName(), command.getLastName());
-			repository.save(attendee);
-		}
-	}
+    @Override
+    public void handle(ChangeAttendeeName command) throws EventCollisionException, HydrationException {
+
+        Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
+
+        Attendee attendee = repository.getById(command.getAttendeeId());
+
+        if(attendee != null){
+            attendee.changeName(command.getFirstName(), command.getLastName());
+            repository.save(attendee);
+        }
+    }
 }

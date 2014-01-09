@@ -10,22 +10,22 @@ import com.simplecqrs.appengine.messaging.Command;
  */
 public class ResolveDuplicateEmail implements Command{
 
-	private UUID attendeeId;
-	
-	/**
-	 * Default constructor
-	 * 
-	 * @param attendeeId
-	 */
-	public ResolveDuplicateEmail(UUID attendeeId){
-		this.attendeeId = attendeeId;
-	}
-	
-	/**
-	 * Get the attendee Id
-	 * @return
-	 */
-	public UUID getAttendeeId(){
-		return attendeeId;
-	}
+    private UUID attendeeId;
+
+    /**
+     * Default constructor
+     * 
+     * @param attendeeId
+     */
+    public ResolveDuplicateEmail(UUID attendeeId){
+        this.attendeeId = attendeeId;
+    }
+
+    /**
+     * Get the attendee Id
+     * @return
+     */
+    public UUID getAttendeeId(){
+        return attendeeId;
+    }
 }

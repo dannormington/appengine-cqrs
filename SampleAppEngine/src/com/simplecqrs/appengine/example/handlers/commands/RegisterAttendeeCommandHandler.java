@@ -11,14 +11,15 @@ import com.simplecqrs.appengine.persistence.Repository;
 
 public class RegisterAttendeeCommandHandler implements CommandHandler<RegisterAttendee> {
 
-	public void handle(RegisterAttendee command) throws EventCollisionException, HydrationException {
-			
-		Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
-		
-		Attendee attendee = Attendee.create(command.getAttendeeId(), command.getEmail(), command.getFirstName(), command.getLastName());
-		
-		if(attendee != null){
-			repository.save(attendee);
-		}
-	}
+    @Override
+    public void handle(RegisterAttendee command) throws EventCollisionException, HydrationException {
+
+        Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
+
+        Attendee attendee = Attendee.create(command.getAttendeeId(), command.getEmail(), command.getFirstName(), command.getLastName());
+
+        if(attendee != null){
+            repository.save(attendee);
+        }
+    }
 }

@@ -28,17 +28,17 @@ import com.simplecqrs.appengine.exceptions.EventCollisionException;
  */
 public class AttendeeRegisteredEventHandler extends EventHandler<AttendeeRegistered>{
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AttendeeRegisteredEventHandler(AttendeeRegistered event){
-		super(event);
-	}
-	
-	@Override
-	public void run() {
-		
-		DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-        
+    public AttendeeRegisteredEventHandler(AttendeeRegistered event){
+        super(event);
+    }
+
+    @Override
+    public void run() {
+
+        DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+
         /*
          * Run a query to see if the email has already been registered
          */
@@ -50,46 +50,46 @@ public class AttendeeRegisteredEventHandler extends EventHandler<AttendeeRegiste
 
         PreparedQuery preparedQuery = datastoreService.prepare(deviceQuery);
         List<Entity> matchingEmails = preparedQuery.asList(FetchOptions.Builder.withDefaults());
-        	
+
         Key attendeeKey = KeyFactory.createKey("Attendee", event.getAttendeeId().toString());
         Entity attendee = null;
-        
+
         Transaction transaction = datastoreService.beginTransaction();
-        
+
         try {
-                attendee = datastoreService.get(attendeeKey);
-                
-                //do nothing if found. This is a new registration
-                
+            attendee = datastoreService.get(attendeeKey);
+
+            //do nothing if found. This is a new registration
+
         } catch (EntityNotFoundException e) {
-        	
-        	boolean duplicateExists = matchingEmails != null && !matchingEmails.isEmpty();
-        	
-        	attendee = new Entity(attendeeKey);
-        	attendee.setProperty("FirstName", event.getFirstName());
+
+            boolean duplicateExists = matchingEmails != null && !matchingEmails.isEmpty();
+
+            attendee = new Entity(attendeeKey);
+            attendee.setProperty("FirstName", event.getFirstName());
             attendee.setProperty("LastName", event.getLastName());
             attendee.setProperty("Email", event.getEmail());
             attendee.setProperty("IsEnabled", !duplicateExists);
             datastoreService.put(attendee);
             transaction.commit();
-            
+
             /*
              * If a match is found. Send a compensating command.
              * You'll notice we're still allowing the read model to 
              * be populated
              */
-    		if(duplicateExists){
-    			try {
-					SimpleMessageBus.getInstance().send(new ResolveDuplicateEmail(event.getAttendeeId()));
-				} catch (EventCollisionException | HydrationException commandException) {
-					MessageLog.log(commandException);
-					//may want to publish message to administrator
-				}
-    		}
-            
+            if(duplicateExists){
+                try {
+                    SimpleMessageBus.getInstance().send(new ResolveDuplicateEmail(event.getAttendeeId()));
+                } catch (EventCollisionException | HydrationException commandException) {
+                    MessageLog.log(commandException);
+                    //may want to publish message to administrator
+                }
+            }
+
         } finally {
-        	if(transaction != null && transaction.isActive())
+            if(transaction != null && transaction.isActive())
                 transaction.rollback();
         }
-	}
+    }
 }

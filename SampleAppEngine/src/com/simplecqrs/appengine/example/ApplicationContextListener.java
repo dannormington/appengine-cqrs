@@ -23,21 +23,21 @@ import com.simplecqrs.appengine.messaging.SimpleMessageBus;
  */
 public class ApplicationContextListener implements ServletContextListener {
 
-	@Override
-	public void contextDestroyed(ServletContextEvent event) {
-		// App Engine does not currently invoke this method.	
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+        // App Engine does not currently invoke this method.	
+    }
 
-	@Override
-	public void contextInitialized(ServletContextEvent event) {
-		
-		SimpleMessageBus.getInstance().registerCommandHandler(RegisterAttendee.class, new RegisterAttendeeCommandHandler());
-		SimpleMessageBus.getInstance().registerCommandHandler(ChangeAttendeeName.class, new ChangeAttendeeNameCommandHandler());
-		SimpleMessageBus.getInstance().registerCommandHandler(ResolveDuplicateEmail.class, new ResolveDuplicateEmailCommandHandler());
-		
-		SimpleMessageBus.getInstance().registerEventHandler(AttendeeRegistered.class, AttendeeRegisteredEventHandler.class);
-		SimpleMessageBus.getInstance().registerEventHandler(AttendeeNameChanged.class, AttendeeNameChangedEventHandler.class);
-		SimpleMessageBus.getInstance().registerEventHandler(AttendeeDisabled.class, AttendeeDisabledEventHandler.class);
-	}
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+
+        SimpleMessageBus.getInstance().registerCommandHandler(RegisterAttendee.class, new RegisterAttendeeCommandHandler());
+        SimpleMessageBus.getInstance().registerCommandHandler(ChangeAttendeeName.class, new ChangeAttendeeNameCommandHandler());
+        SimpleMessageBus.getInstance().registerCommandHandler(ResolveDuplicateEmail.class, new ResolveDuplicateEmailCommandHandler());
+
+        SimpleMessageBus.getInstance().registerEventHandler(AttendeeRegistered.class, AttendeeRegisteredEventHandler.class);
+        SimpleMessageBus.getInstance().registerEventHandler(AttendeeNameChanged.class, AttendeeNameChangedEventHandler.class);
+        SimpleMessageBus.getInstance().registerEventHandler(AttendeeDisabled.class, AttendeeDisabledEventHandler.class);
+    }
 
 }

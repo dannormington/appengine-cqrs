@@ -8,23 +8,23 @@ import java.util.logging.Logger;
  */
 public class MessageLog {
 
-	private static final String LOG_NAME = "Simple CQRS Service Log";
+    private static final String LOG_NAME = "Simple CQRS Service Log";
 
-	private static final Logger log = Logger.getLogger(LOG_NAME);
+    private static final Logger log = Logger.getLogger(LOG_NAME);
 
-	static {
-		log.setLevel(java.util.logging.Level.FINEST);
-	}
+    static {
+        log.setLevel(java.util.logging.Level.FINEST);
+    }
 
-	public static void log(String message){
-		log.log(Level.INFO, message);
-	}
+    public static void log(String message){
+        log.log(Level.INFO, message);
+    }
 
-	public static void log(Exception e){
+    public static void log(Exception e){
 
-		if(e == null)
-			return;
+        if(e == null)
+            return;
 
-		log.log(Level.SEVERE, e.getClass().getName(), e);
-	}
+        log.log(Level.SEVERE, e.getClass().getName(), e);
+    }
 }

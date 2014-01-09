@@ -12,16 +12,16 @@ import com.simplecqrs.appengine.persistence.Repository;
 
 public class ResolveDuplicateEmailCommandHandler implements CommandHandler<ResolveDuplicateEmail>{
 
-	@Override
-	public void handle(ResolveDuplicateEmail command) throws EventCollisionException, HydrationException {
-		
-		Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
-		
-		Attendee attendee = repository.getById(command.getAttendeeId());
-		
-		if(attendee != null){
-			attendee.disable(DisableReason.DUPLICATE);
-			repository.save(attendee);
-		}
-	}
+    @Override
+    public void handle(ResolveDuplicateEmail command) throws EventCollisionException, HydrationException {
+
+        Repository<Attendee> repository = new EventRepository<Attendee>(Attendee.class, Constants.DOMAIN_EVENTS_PROCESSING_QUEUE);
+
+        Attendee attendee = repository.getById(command.getAttendeeId());
+
+        if(attendee != null){
+            attendee.disable(DisableReason.DUPLICATE);
+            repository.save(attendee);
+        }
+    }
 }

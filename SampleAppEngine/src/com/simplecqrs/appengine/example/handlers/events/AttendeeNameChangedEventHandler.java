@@ -16,33 +16,33 @@ import com.simplecqrs.appengine.example.MessageLog;
  */
 public class AttendeeNameChangedEventHandler extends EventHandler<AttendeeNameChanged>{
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AttendeeNameChangedEventHandler(AttendeeNameChanged event){
-		super(event);
-	}
-	
-	@Override
-	public void run() {
-		
-		DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+    public AttendeeNameChangedEventHandler(AttendeeNameChanged event){
+        super(event);
+    }
+
+    @Override
+    public void run() {
+
+        DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         Transaction transaction = datastoreService.beginTransaction();
-		
+
         Key attendeeKey = KeyFactory.createKey("Attendee", event.getAttendeeId().toString());
         Entity attendee = null;
-        
+
         try {
-                attendee = datastoreService.get(attendeeKey);
-                attendee.setProperty("FirstName", event.getFirstName());
-                attendee.setProperty("LastName", event.getLastName());
-                datastoreService.put(attendee);
-                transaction.commit();
-                
+            attendee = datastoreService.get(attendeeKey);
+            attendee.setProperty("FirstName", event.getFirstName());
+            attendee.setProperty("LastName", event.getLastName());
+            datastoreService.put(attendee);
+            transaction.commit();
+
         } catch (EntityNotFoundException e) {
-        	MessageLog.log(e);
+            MessageLog.log(e);
         } finally {
-        	if(transaction != null && transaction.isActive())
+            if(transaction != null && transaction.isActive())
                 transaction.rollback();
         }
-	}
+    }
 }

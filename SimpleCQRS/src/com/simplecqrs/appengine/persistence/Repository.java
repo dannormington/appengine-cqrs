@@ -12,21 +12,21 @@ import com.simplecqrs.appengine.exceptions.HydrationException;
  * @param <T>
  */
 public interface Repository<T extends AggregateRoot> {
-	
-	/**
-	 * Persists the aggregate
-	 * 
-	 * @param aggregate
-	 * @throws EventCollisionException
-	 */
-	void save(T aggregate) throws EventCollisionException;
-	
-	/**
-	 * Get the aggregate
-	 * 
-	 * @param id
-	 * @return
-	 * @throws AggregateHydrationException
-	 */
-	T getById(UUID id) throws HydrationException;
+
+    /**
+     * Persists the aggregate
+     * 
+     * @param aggregate
+     * @throws EventCollisionException
+     */
+    void save(T aggregate) throws EventCollisionException;
+
+    /**
+     * Get the aggregate
+     * 
+     * @param id
+     * @return
+     * @throws AggregateHydrationException
+     */
+    T getById(UUID id) throws HydrationException;
 }

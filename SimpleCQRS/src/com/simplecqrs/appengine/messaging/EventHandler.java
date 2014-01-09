@@ -23,18 +23,18 @@ import com.google.appengine.api.taskqueue.DeferredTask;
  */
 @SuppressWarnings("serial")
 public abstract class EventHandler<T extends Event> implements DeferredTask {
-	
-	/**
-	 * The event
-	 */
-	protected T event;
-	
-	/**
-	 * Default constructor
-	 * 
-	 * @param event
-	 */
-	public EventHandler(T event){
-		this.event = event;
-	}
+
+    /**
+     * The event
+     */
+    protected T event;
+
+    /**
+     * Default constructor
+     * 
+     * @param event
+     */
+    public EventHandler(T event){
+        this.event = event;
+    }
 }

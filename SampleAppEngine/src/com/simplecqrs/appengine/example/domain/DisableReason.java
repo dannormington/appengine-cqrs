@@ -5,15 +5,15 @@ package com.simplecqrs.appengine.example.domain;
  * an attendee being disabled
  */
 public enum DisableReason {
-	DUPLICATE (1);
-	
-	private int reason;
+    DUPLICATE (1);
 
-	DisableReason(int reason){
-		this.reason = reason;
-	}
-	
-	public int getReason(){
-		return reason;
-	}
+    private int reason;
+
+    DisableReason(int reason){
+        this.reason = reason;
+    }
+
+    public int getReason(){
+        return reason;
+    }
 };
