@@ -9,7 +9,7 @@ import com.simplecqrs.appengine.messaging.Event;
 /**
  * Interface to support basic event store functionality
  */
-public interface EventStore {
+interface EventStore {
 
     /**
      * Persist the changes

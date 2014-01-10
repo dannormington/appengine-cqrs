@@ -3,7 +3,7 @@ package com.simplecqrs.appengine.persistence;
 /**
  * Simple event that is stored
  */
-public class EventModel {
+class EventModel {
     private String kind = null;
     private String json = null;
     private Long version = null;

@@ -10,7 +10,7 @@ import com.google.appengine.api.ThreadManager;
 /**
  * Class that supports executing a runnable command on another thread
  */
-public class ThreadExecutor implements Executor {
+class ThreadExecutor implements Executor {
     @Override
     public void execute(Runnable command) {
         if(command != null){

@@ -22,7 +22,7 @@ import com.simplecqrs.appengine.messaging.SimpleMessageBus;
  * Basic implementation of an event store that persists
  * and retrieves from a Google App Engine Datastore 
  */
-public class AppEngineEventStore implements EventStore {
+class AppEngineEventStore implements EventStore {
 
     /**
      * The name of the kind/schema
