@@ -40,17 +40,20 @@ public class AttendeeRegisteredEventHandler extends EventHandler<AttendeeRegiste
         DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
         /*
-         * Run a query to see if the email has already been registered
+         * Run a query against the read store to see if the email has already been registered
          */
         Filter emailFilter = new FilterPredicate("Email", FilterOperator.EQUAL, event.getEmail());
 
-        Query deviceQuery = new Query("Attendee")
+        Query attendeeQuery = new Query("Attendee")
         .setFilter(emailFilter)
         .setKeysOnly();
 
-        PreparedQuery preparedQuery = datastoreService.prepare(deviceQuery);
+        PreparedQuery preparedQuery = datastoreService.prepare(attendeeQuery);
         List<Entity> matchingEmails = preparedQuery.asList(FetchOptions.Builder.withDefaults());
 
+        /*
+         * Create an attendee key based upon the UUID
+         */
         Key attendeeKey = KeyFactory.createKey("Attendee", event.getAttendeeId().toString());
         Entity attendee = null;
 
