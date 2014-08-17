@@ -3,7 +3,7 @@ Google App Engine / CQRS
 
 CQRS pattern implemented using Google App Engine technologies
 
-This implemenatation is based off of Greg Young's Simple CQRS c# example
+This implemenatation is based off of Greg Young's Simple CQRS C# example
 located at https://github.com/gregoryyoung/m-r
 
 ##App Engine Technologies
