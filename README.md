@@ -3,7 +3,7 @@ Google App Engine / CQRS
 
 CQRS pattern implemented using Google App Engine technologies
 
-This implemenatation is based off of Greg Young's Simple CQRS example
+This implemenatation is based off of Greg Young's Simple CQRS c# example
 located at https://github.com/gregoryyoung/m-r
 
 ##App Engine Technologies
@@ -20,6 +20,7 @@ located at https://github.com/gregoryyoung/m-r
 		* Eventual consistency for all other queries
 - Task Queue
 	* https://developers.google.com/appengine/docs/java/taskqueue/
+	* This example used the DeferredTask type to handle events. This could easily be switched to uri based tasks that communicate with servlets if that is your preference.
 - Google Cloud Endpoints
 	* https://developers.google.com/appengine/docs/java/endpoints/
 
