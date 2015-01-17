@@ -3,7 +3,7 @@ Google App Engine / CQRS
 
 CQRS pattern implemented using Google App Engine technologies. The example code includes both a base set of classes as well as a sample domain model, commands, events, and set of Cloud Endpoints to interact.
 
-This implemenatation is based off of Greg Young's Simple CQRS C# example
+This implementation is based off of Greg Young's Simple CQRS C# example
 located at https://github.com/gregoryyoung/m-r
 
 ##Sample App Notes
