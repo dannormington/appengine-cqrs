@@ -1,4 +1,4 @@
-Google App Engine / CQRS
+Google App Engine / CQRS with Event Sourcing
 =========================
 
 CQRS pattern implemented using Google App Engine technologies. The example code includes both a base set of classes as well as a sample domain model, commands, events, and set of Cloud Endpoints to interact.
