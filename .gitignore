@@ -1,17 +1,1 @@
-# Eclipse project files
-.settings
-
-# App Engine Files #
-*.api
-.google_apis
-appengine-generated
-endpoint-libs
-
-.DS_Store
-
-# Package Files #
-*.class
-*.jar
-*.war
-*.ear
-!gson-2.2.4.jar
+/target/
