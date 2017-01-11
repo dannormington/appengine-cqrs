@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<listener>
-		<listener-class>com.simplecqrs.appengine.example.ApplicationContextListener</listener-class>
+		<listener-class>com.cqrs.appengine.sample.ApplicationContextListener</listener-class>
 	</listener>
 
 	<servlet>
@@ -11,7 +11,7 @@
 		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
 		<init-param>
 			<param-name>services</param-name>
-			<param-value>com.simplecqrs.appengine.example.AttendeeApi</param-value>
+			<param-value>com.cqrs.appengine.sample.AttendeeApi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
