@@ -21,10 +21,11 @@ public class Attendee extends AggregateRootBase {
      */
     private UUID confirmationId = null;
     
+    
     /**
-     * Current email address
+     * Email address the user has requested a change to
      */
-    private String email = null;
+    private String unconfirmedEmail = null;
 
     /**
      * Constructor used when hydrating
@@ -118,7 +119,7 @@ public class Attendee extends AggregateRootBase {
     	if(!isEnabled) return;
     	
     	if(confirmationId.equals(this.confirmationId)){
-    		applyChange(new AttendeeChangeEmailConfirmed(this.getId(),confirmationId, email));
+    		applyChange(new AttendeeChangeEmailConfirmed(this.getId(), confirmationId, unconfirmedEmail));
     	} else{
     		throw new InvalidParametersException(this.getId(), "The confirmation Ids do not match.");	
     	}
@@ -151,16 +152,6 @@ public class Attendee extends AggregateRootBase {
      * @param event
      */
     @SuppressWarnings("unused")
-    private void apply(AttendeeRegistered event){
-        email = event.getEmail();
-    }
-
-    /**
-     * Apply the state change for the {@link AttendeeDisabled} event
-     * 
-     * @param event
-     */
-    @SuppressWarnings("unused")
     private void apply(AttendeeDisabled event){
         isEnabled = false;
     }
@@ -173,7 +164,7 @@ public class Attendee extends AggregateRootBase {
     @SuppressWarnings("unused")
 	private void apply(AttendeeEmailChanged event){
     	confirmationId = event.getConfirmationId();
-    	email = event.getEmail();
+    	unconfirmedEmail = event.getEmail();
     }
     
     /**
@@ -184,5 +175,6 @@ public class Attendee extends AggregateRootBase {
     @SuppressWarnings("unused")
 	private void apply(AttendeeChangeEmailConfirmed event){
     	confirmationId = null;
+    	unconfirmedEmail = null;
     }
 }
