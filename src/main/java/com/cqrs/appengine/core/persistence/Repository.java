@@ -6,7 +6,6 @@ import com.cqrs.appengine.core.domain.AggregateRoot;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 
 /**
  * Interface for a repository implementation
@@ -32,5 +31,5 @@ public interface Repository<T extends AggregateRoot> {
      * @throws AggregateNotFoundException
      * @throws InvalidParametersException
      */
-    T getById(UUID id) throws HydrationException, AggregateNotFoundException, InvalidParametersException;
+    T getById(UUID id) throws HydrationException, AggregateNotFoundException;
 }

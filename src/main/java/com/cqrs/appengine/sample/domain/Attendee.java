@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import com.cqrs.appengine.core.domain.AggregateRootBase;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 
 /**
  * Class that represents an attendee at a conference
@@ -59,20 +58,23 @@ public class Attendee extends AggregateRootBase {
      * @throws IllegalArgumentException
      * @throws HydrationException 
      */
-    public void changeName(String firstName, String lastName) throws InvalidParametersException, HydrationException {
+    public void changeName(String firstName, String lastName) throws HydrationException {
 
         /*
          * Don't bother checking for parameter validity if the attendee isn't enabled
          */
-    	if(!isEnabled) return;
-    	
+    	if(!isEnabled) throw new IllegalStateException("Operation not allowed. The attendee is disabled");
+
         /*
          * Only change state if the data is valid 
          */
-        if(firstName != null && firstName.trim().length() > 0 && lastName != null && lastName.trim().length() > 0)
-            applyChange(new AttendeeNameChanged(this.getId(), firstName.trim(), lastName.trim()));
-        else
-            throw new InvalidParametersException(this.getId(), "First and last names are required.");
+        if(firstName != null && firstName.trim().length() > 0 && lastName != null && lastName.trim().length() > 0) {
+        	applyChange(new AttendeeNameChanged(this.getId(), firstName.trim(), lastName.trim()));
+        }
+        else {
+        	throw new IllegalArgumentException("First and last names are required.");
+        }
+            
     }
 
     /**
@@ -86,7 +88,7 @@ public class Attendee extends AggregateRootBase {
         /*
          * Only change if the attendee is enabled
          */
-    	if(!isEnabled) return;
+    	if(!isEnabled) throw new IllegalStateException("Operation not allowed. The attendee is disabled");
     	
         applyChange(new AttendeeDisabled(this.getId(), reason));
     }
@@ -96,14 +98,14 @@ public class Attendee extends AggregateRootBase {
      * 
      * @param email
      */
-    public void changeEmail(String email) throws InvalidParametersException, HydrationException {
+    public void changeEmail(String email) throws HydrationException {
     	
-    	if(!isEnabled) return;
+    	if(!isEnabled) throw new IllegalStateException("Operation not allowed. The attendee is disabled");
     	
-    	if(email != null && email.trim().length() > 0){
+    	if(email != null && email.trim().length() > 0) {
     		applyChange(new AttendeeEmailChanged(this.getId(), email.trim()));
-    	}else{
-    		throw new InvalidParametersException(this.getId(), "Email is required.");
+    	} else {
+    		throw new IllegalArgumentException("Email is required.");
     	}
     }
     
@@ -114,14 +116,14 @@ public class Attendee extends AggregateRootBase {
      * @throws HydrationException 
      * @throws InvalidParametersException 
      */
-    public void confirmChangeEmail(UUID confirmationId) throws HydrationException, InvalidParametersException{
+    public void confirmChangeEmail(UUID confirmationId) throws HydrationException {
     	
-    	if(!isEnabled) return;
+    	if(!isEnabled) throw new IllegalStateException("Operation not allowed. The attendee is disabled");
     	
-    	if(confirmationId.equals(this.confirmationId)){
+    	if(confirmationId.equals(this.confirmationId)) {
     		applyChange(new AttendeeChangeEmailConfirmed(this.getId(), confirmationId, unconfirmedEmail));
-    	} else{
-    		throw new InvalidParametersException(this.getId(), "The confirmation Ids do not match.");	
+    	} else {
+    		throw new IllegalArgumentException("The confirmation Ids do not match.");	
     	}
     }
 
@@ -135,15 +137,16 @@ public class Attendee extends AggregateRootBase {
      * @return
      * @throws HydrationException 
      */
-    public static Attendee create(UUID attendeeId, String email, String firstName, String lastName) throws InvalidParametersException, HydrationException{
+    public static Attendee create(UUID attendeeId, String email, String firstName, String lastName) throws HydrationException {
 
         /*
          * Only create an instance if all of the data is valid
          */
-        if(attendeeId != null && email != null && email.trim().length() > 0 && firstName != null && firstName.trim().length() > 0 && lastName != null && lastName.trim().length() > 0)
-            return new Attendee(attendeeId, email.trim(), firstName.trim(), lastName.trim());
-        
-        throw new InvalidParametersException(attendeeId, "Attendee Id, Email, First Name, Last Name are required.");
+        if(attendeeId != null && email != null && email.trim().length() > 0 && firstName != null && firstName.trim().length() > 0 && lastName != null && lastName.trim().length() > 0) {
+        	return new Attendee(attendeeId, email.trim(), firstName.trim(), lastName.trim());
+        }
+            
+        throw new IllegalArgumentException("Attendee Id, Email, First Name, Last Name are required.");
     }
     
     /**

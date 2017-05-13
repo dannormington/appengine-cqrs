@@ -3,7 +3,6 @@ package com.cqrs.appengine.core.messaging;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 
 /**
  * Interface for a simple message bus
@@ -50,5 +49,5 @@ public interface MessageBus{
      * @throws AggregateNotFoundException
      * @throws InvalidParametersException
      */
-    <T extends Command> void send(T command) throws EventCollisionException, HydrationException, AggregateNotFoundException, InvalidParametersException;
+    <T extends Command> void send(T command) throws EventCollisionException, HydrationException, AggregateNotFoundException;
 }

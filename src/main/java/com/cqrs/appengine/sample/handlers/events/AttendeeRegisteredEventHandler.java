@@ -5,7 +5,6 @@ import java.util.List;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 import com.cqrs.appengine.core.messaging.EventHandler;
 import com.cqrs.appengine.core.messaging.SimpleMessageBus;
 import com.cqrs.appengine.sample.MessageLog;
@@ -86,7 +85,7 @@ public class AttendeeRegisteredEventHandler extends EventHandler<AttendeeRegiste
             if(duplicateExists){
                 try {
                     SimpleMessageBus.getInstance().send(new ResolveDuplicateEmail(event.getAttendeeId()));
-                } catch (EventCollisionException | HydrationException | AggregateNotFoundException | InvalidParametersException commandException) {
+                } catch (EventCollisionException | HydrationException | AggregateNotFoundException commandException) {
                     MessageLog.log(commandException);
                     //may want to publish message to administrator
                 }

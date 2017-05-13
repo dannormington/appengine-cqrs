@@ -5,7 +5,6 @@ import java.util.UUID;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 import com.cqrs.appengine.core.messaging.Event;
 
 /**
@@ -32,6 +31,6 @@ interface EventStore {
      * @throws AggregateNotFoundException
      * @throws InvalidParametersException
      */
-    Iterable<Event> getEvents(UUID aggregateId) throws HydrationException, AggregateNotFoundException, InvalidParametersException; 
+    Iterable<Event> getEvents(UUID aggregateId) throws HydrationException, AggregateNotFoundException; 
 }
 
