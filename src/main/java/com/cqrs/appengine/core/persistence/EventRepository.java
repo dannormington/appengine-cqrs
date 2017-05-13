@@ -9,7 +9,6 @@ import com.cqrs.appengine.core.domain.AggregateRoot;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 import com.cqrs.appengine.core.messaging.Event;
 
 /**
@@ -57,7 +56,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
     }
 
     @Override
-    public T getById(UUID id) throws HydrationException, AggregateNotFoundException, InvalidParametersException {
+    public T getById(UUID id) throws HydrationException, AggregateNotFoundException {
 
         T aggregate = null;
 

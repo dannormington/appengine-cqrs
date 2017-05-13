@@ -3,7 +3,6 @@ package com.cqrs.appengine.sample;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 import com.cqrs.appengine.core.messaging.Command;
 import com.cqrs.appengine.core.messaging.SimpleMessageBus;
 import com.cqrs.appengine.sample.commands.ChangeAttendeeEmail;
@@ -63,7 +62,7 @@ public class AttendeeApi {
             throw new ConflictException(e.getMessage());
         }catch(HydrationException | AggregateNotFoundException e){
         	throw new NotFoundException(e.getMessage());
-        }catch(InvalidParametersException e){
+        }catch(Exception e){
         	throw new BadRequestException(e.getMessage());
         }
     }

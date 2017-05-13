@@ -7,7 +7,6 @@ import java.util.UUID;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 import com.cqrs.appengine.core.messaging.Event;
 import com.cqrs.appengine.core.messaging.SimpleMessageBus;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -184,9 +183,9 @@ class AppEngineEventStore implements EventStore {
     }
 
     @Override
-    public Iterable<Event> getEvents(UUID aggregateId) throws HydrationException, AggregateNotFoundException, InvalidParametersException {
+    public Iterable<Event> getEvents(UUID aggregateId) throws HydrationException, AggregateNotFoundException {
 
-    	if(aggregateId == null) throw new InvalidParametersException(aggregateId);
+    	if(aggregateId == null) throw new IllegalArgumentException("aggregateId is required");
     	
         DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
 

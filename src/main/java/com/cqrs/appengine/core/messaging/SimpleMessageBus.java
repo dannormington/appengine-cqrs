@@ -10,7 +10,6 @@ import java.util.Map;
 import com.cqrs.appengine.core.exceptions.AggregateNotFoundException;
 import com.cqrs.appengine.core.exceptions.EventCollisionException;
 import com.cqrs.appengine.core.exceptions.HydrationException;
-import com.cqrs.appengine.core.exceptions.InvalidParametersException;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -117,7 +116,7 @@ public class SimpleMessageBus implements MessageBus {
      * 
      */
     @Override
-    public <T extends Command> void send(T command) throws EventCollisionException, HydrationException, AggregateNotFoundException, InvalidParametersException {
+    public <T extends Command> void send(T command) throws EventCollisionException, HydrationException, AggregateNotFoundException {
 
         if(command == null || commandHandlers.isEmpty())
             return;
