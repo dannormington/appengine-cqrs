@@ -29,7 +29,6 @@ interface EventStore {
      * @return
      * @throws HydrationException
      * @throws AggregateNotFoundException
-     * @throws InvalidParametersException
      */
     Iterable<Event> getEvents(UUID aggregateId) throws HydrationException, AggregateNotFoundException; 
 }

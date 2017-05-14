@@ -47,7 +47,6 @@ public interface MessageBus{
      * @throws EventCollisionException
      * @throws HydrationException
      * @throws AggregateNotFoundException
-     * @throws InvalidParametersException
      */
     <T extends Command> void send(T command) throws EventCollisionException, HydrationException, AggregateNotFoundException;
 }

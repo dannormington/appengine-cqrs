@@ -16,7 +16,6 @@ public interface CommandHandler<T extends Command> {
      * @throws EventCollisionException
      * @throws HydrationException
      * @throws AggregateNotFoundException
-     * @throws InvalidParametersException
      */
     void handle(T command) throws EventCollisionException, HydrationException, AggregateNotFoundException;
 }

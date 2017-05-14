@@ -114,7 +114,6 @@ public class Attendee extends AggregateRootBase {
      * 
      * @param confirmationId
      * @throws HydrationException 
-     * @throws InvalidParametersException 
      */
     public void confirmChangeEmail(UUID confirmationId) throws HydrationException {
     	

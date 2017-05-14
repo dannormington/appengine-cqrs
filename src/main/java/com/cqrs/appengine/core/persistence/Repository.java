@@ -29,7 +29,6 @@ public interface Repository<T extends AggregateRoot> {
      * @return
      * @throws HydrationException
      * @throws AggregateNotFoundException
-     * @throws InvalidParametersException
      */
     T getById(UUID id) throws HydrationException, AggregateNotFoundException;
 }
