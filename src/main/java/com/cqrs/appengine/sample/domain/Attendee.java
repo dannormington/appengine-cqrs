@@ -143,6 +143,10 @@ public class Attendee extends AggregateRootBase {
         throw new IllegalArgumentException("Attendee Id, Email, First Name, Last Name are required.");
     }
     
+    /**
+     * Apply the state change for the {@link AttendeeRegistered} event
+     * @param event
+     */
     @SuppressWarnings("unused")
     private void apply(AttendeeRegistered event){
         id = event.getAttendeeId();
