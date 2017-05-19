@@ -17,7 +17,7 @@ public abstract class AggregateRootBase implements AggregateRoot {
     /**
      * Aggregate id
      */
-    private UUID id = null;
+    protected UUID id = null;
 
     /**
      * list of changes that have occurred since last loaded
@@ -28,21 +28,6 @@ public abstract class AggregateRootBase implements AggregateRoot {
      * returns the expected version
      */
     private int expectedVersion = 0;
-
-    /**
-     * Default constructor
-     */
-    public AggregateRootBase(){
-        id = UUID.randomUUID();
-    }
-
-    /**
-     * Constructor to initialize the aggregate's id
-     * @param id
-     */
-    public AggregateRootBase(UUID id){
-        this.id = id;
-    }
 
     @Override
     public int getExpectedVersion(){

@@ -2,6 +2,7 @@ package com.cqrs.appengine.sample.domain;
 
 import java.util.UUID;
 
+import com.cqrs.appengine.core.StringHelper;
 import com.cqrs.appengine.core.domain.AggregateRootBase;
 import com.cqrs.appengine.core.exceptions.HydrationException;
 
@@ -20,19 +21,15 @@ public class Attendee extends AggregateRootBase {
      */
     private UUID confirmationId = null;
     
-    
     /**
      * Email address the user has requested a change to
      */
     private String unconfirmedEmail = null;
-
+    
     /**
-     * Constructor used when hydrating
-     * 
-     * @param attendeeId
+     * Default constructor. 
      */
-    private Attendee(UUID attendeeId){
-        super(attendeeId);
+    public Attendee() {	
     }
 
     /**
@@ -45,8 +42,6 @@ public class Attendee extends AggregateRootBase {
      * @throws HydrationException 
      */
     private Attendee(UUID attendeeId, String email, String firstName, String lastName) throws HydrationException {
-        this(attendeeId);
-
         applyChange(new AttendeeRegistered(attendeeId, email, firstName, lastName));
     }
 
@@ -68,7 +63,7 @@ public class Attendee extends AggregateRootBase {
         /*
          * Only change state if the data is valid 
          */
-        if(firstName != null && firstName.trim().length() > 0 && lastName != null && lastName.trim().length() > 0) {
+        if(!StringHelper.IsNullOrWhitespace(firstName) && !StringHelper.IsNullOrWhitespace(lastName)) {
         	applyChange(new AttendeeNameChanged(this.getId(), firstName.trim(), lastName.trim()));
         }
         else {
@@ -102,7 +97,7 @@ public class Attendee extends AggregateRootBase {
     	
     	if(!isEnabled) throw new IllegalStateException("Operation not allowed. The attendee is disabled");
     	
-    	if(email != null && email.trim().length() > 0) {
+    	if(!StringHelper.IsNullOrWhitespace(email)) {
     		applyChange(new AttendeeEmailChanged(this.getId(), email.trim()));
     	} else {
     		throw new IllegalArgumentException("Email is required.");
@@ -141,11 +136,16 @@ public class Attendee extends AggregateRootBase {
         /*
          * Only create an instance if all of the data is valid
          */
-        if(attendeeId != null && email != null && email.trim().length() > 0 && firstName != null && firstName.trim().length() > 0 && lastName != null && lastName.trim().length() > 0) {
+        if(attendeeId != null && !StringHelper.IsNullOrWhitespace(email) && !StringHelper.IsNullOrWhitespace(firstName) && !StringHelper.IsNullOrWhitespace(lastName)) {
         	return new Attendee(attendeeId, email.trim(), firstName.trim(), lastName.trim());
         }
             
         throw new IllegalArgumentException("Attendee Id, Email, First Name, Last Name are required.");
+    }
+    
+    @SuppressWarnings("unused")
+    private void apply(AttendeeRegistered event){
+        id = event.getAttendeeId();
     }
     
     /**
