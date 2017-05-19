@@ -1,8 +1,5 @@
 package com.cqrs.appengine.core.persistence;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import java.util.UUID;
 
 import com.cqrs.appengine.core.domain.AggregateRoot;
@@ -58,36 +55,21 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
     @Override
     public T getById(UUID id) throws HydrationException, AggregateNotFoundException {
 
-        T aggregate = null;
-
         /*
          * get the events from the event store
          */
         Iterable<Event> history = eventStore.getEvents(id);
-
+        
         /*
-         * if there aren't any items then just return null 
+         * Create a new instance of the aggregate
          */
-        if(history == null)
-            return aggregate;
-
-        /*
-         * create a new instance of the object by calling
-         * the constructor that takes the aggregate's id
-         */
-        Constructor<T> constructor = null;
-
-        try {
-            constructor = aClass.getDeclaredConstructor(UUID.class);
-            constructor.setAccessible(true);
-            aggregate = constructor.newInstance(id);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            /*
-             * throw a hydration exception along with the aggregate id and the message
-             */
-            throw new HydrationException(id, e.getMessage());
-        }
-
+        T aggregate;
+		try {
+			aggregate = this.aClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new HydrationException(id);
+		}
+        
         aggregate.loadFromHistory(history);
 
         return aggregate;
