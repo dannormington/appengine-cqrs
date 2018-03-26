@@ -6,10 +6,10 @@ CQRS pattern implemented using Google App Engine technologies. The example code 
 This implementation is based off of Greg Young's Simple CQRS C# example
 located at https://github.com/gregoryyoung/m-r
 
-##Sample App Notes
+## Sample App Notes
 - Command and event registration is located in the ApplicationContextListener class.
 
-##App Engine Technologies
+## App Engine Technologies
 - Datastore
 	* https://developers.google.com/appengine/docs/java/datastore/
 	* App Engine Datastore is a schemaless object datastore providing
